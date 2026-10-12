@@ -89,6 +89,44 @@ export default function BriefBoard({ drafts, now, testMode, newHours, archiveDay
   );
 }
 
+// The four checks behind the fit score, as small bars (each rated 0-5 by Gemini)
+const CHECKS = [
+  ['sector', 'Sector'],
+  ['stage', 'Stage'],
+  ['geography', 'Geography'],
+  ['round_size', 'Round size'],
+];
+
+function ScoreBars({ parts }) {
+  if (!parts) return null;
+  return (
+    <ul className="bars" aria-label="Why this score">
+      {CHECKS.filter(([k]) => parts[k] != null).map(([k, label]) => (
+        <li key={k} className={`bar bar-${parts[k] >= 4 ? 'good' : parts[k] >= 3 ? 'ok' : 'low'}`}>
+          <span className="bar-label">{label}</span>
+          <span className="bar-track" aria-hidden="true">
+            <span className="bar-fill" style={{ width: `${(parts[k] / 5) * 100}%` }} />
+          </span>
+          <span className="bar-value">{parts[k]}/5</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// A LinkedIn people search for the founder plus the company, so Rohit can check them in one click
+const linkedInSearch = (name, company) =>
+  `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(`${name} ${company}`)}`;
+
+function LinkedInIcon() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+      <rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor" />
+      <path d="M7 10v7M7 7v.01M11 17v-4.2c0-1.6 1-2.6 2.3-2.6s2.2 1 2.2 2.6V17M11 10v7" stroke="#fff" strokeWidth="2" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
 function CardSummary({ draft, now, windowDays, active, result, onOpen }) {
   return (
     <button
@@ -172,6 +210,7 @@ function DraftPanel({ draft, hidden, testMode, result, onFinish, onClose }) {
         </button>
       </header>
       <p className="reason">{draft.fit_reason}</p>
+      <ScoreBars parts={draft.fit_parts} />
 
       {result ? (
         <p className={`panel-done${result.status === 'sent' ? ' is-sent' : ''}`}>
@@ -202,6 +241,9 @@ function DraftPanel({ draft, hidden, testMode, result, onFinish, onClose }) {
                         <strong>{b.name}</strong>
                         {b.role && <span className="role">{b.role}</span>}
                         {b.background && <span className="bio">{b.background}</span>}
+                        <a className="linkedin" href={linkedInSearch(b.name, draft.name)} target="_blank" rel="noreferrer">
+                          <LinkedInIcon /> Find on LinkedIn
+                        </a>
                       </span>
                     </li>
                   ))}

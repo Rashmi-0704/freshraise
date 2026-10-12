@@ -21,7 +21,7 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 | AI | Screen | **Gemini Flash** (`gemini-3.8-flash`, `lib/gemini.js`) | Picks real pre-seed / seed / angel rounds with an Indian link, in one request | ✅ |
 | Dedupe | Never twice | **Neon Postgres** | Startup name key is UNIQUE; a website can only ever have one draft | ✅ Tested (5 of 5 repeats blocked) |
 | Context | Thesis | `thesis` table in Neon | Sectors, stages, geography, round size (₹), exclusions, minimum score; read fresh every run | ✅ Tested (65 → 90 changed results, no code edit) |
-| AI | Score | **Gemini Flash** | Scores 0-100 with a fixed scale and a one-sentence reason; below the minimum is hidden | ✅ |
+| AI | Score | **Gemini Flash** | Scores 0-100 with a fixed scale and a one-sentence reason, plus a 0-5 rating for each check (sector, stage, geography, round size) shown as bars; below the minimum is hidden | ✅ |
 | AI | Research + draft | **Gemini Flash + Google Search** | Finds website, company background, founders with roles and backgrounds, then writes a short email | ✅ |
 | Context | Rupees | **Frankfurter** (free, no key, ECB rates; `lib/money.js`) | Converts dollar amounts to ₹ crore / lakh at today's rate | ✅ |
 | Storage | Everything | **Neon Postgres** (replaces Supabase, approved) | `thesis`, `articles`, `startups`, `drafts`, `runs` tables, created automatically | ✅ |

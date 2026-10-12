@@ -294,6 +294,41 @@ h1 {
 
 @keyframes fly-off { from { translate: -12px 8px; opacity: 0; } to { translate: 0 0; opacity: 1; } }
 
+/* At-a-glance tiles above the draft folder */
+.tiles { list-style: none; margin: 0 0 22px; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.tile {
+  position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px;
+  align-items: center; padding: 14px 16px; border-radius: 16px; background: var(--paper);
+  box-shadow: 0 0 0 1px var(--line); overflow: hidden;
+}
+.tile::after { content: ''; position: absolute; inset: auto -20px -34px auto; width: 90px; height: 90px; border-radius: 50%; background: var(--tint); opacity: .55; z-index: 0; }
+.tile > * { position: relative; z-index: 1; }
+.tile .icon { grid-row: span 2; width: 34px; height: 34px; padding: 7px; border-radius: 12px; background: var(--tint); color: var(--ink); box-sizing: border-box; }
+.tile strong { font-size: 1.9rem; line-height: 1; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.tile span { color: var(--muted); font-size: .88rem; font-weight: 500; }
+.tile-new { --tint: #d9efda; }
+.tile-waiting { --tint: var(--glow); }
+.tile-sent { --tint: #e3e5fb; }
+
+/* Score breakdown in the side panel */
+.bars { list-style: none; margin: -6px 0 18px; padding: 12px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; background: var(--bg); border-radius: 12px; }
+.bar { display: grid; grid-template-columns: 82px 1fr auto; align-items: center; gap: 8px; font-size: .85rem; }
+.bar-label { color: var(--muted); font-weight: 500; }
+.bar-track { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.bar-fill { display: block; height: 100%; border-radius: inherit; background: var(--c); animation: grow .5s ease-out both; }
+.bar-value { font-weight: 700; font-variant-numeric: tabular-nums; }
+.bar-good { --c: #5aa865; }
+.bar-ok { --c: var(--sun); }
+.bar-low { --c: var(--dusk); }
+@keyframes grow { from { width: 0; } }
+
+/* Founder LinkedIn link */
+.people .linkedin {
+  display: inline-flex; align-items: center; gap: 5px; margin-top: 4px;
+  font-size: .8rem; font-weight: 600; color: #0a66c2; text-decoration: none;
+}
+.people .linkedin:hover { text-decoration: underline; text-underline-offset: 3px; }
+
 /* Sent emails and replies */
 .sent { margin-top: 34px; }
 .sent h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 1.1rem; }
@@ -390,6 +425,12 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
   .card-status { margin-left: 60px; }
   .panel-head h2 { font-size: 1.35rem; }
   .dossier { grid-template-columns: 1fr; }
+  .tiles { gap: 8px; }
+  .tile { grid-template-columns: 1fr; padding: 12px; row-gap: 4px; }
+  .tile .icon { grid-row: auto; width: 28px; height: 28px; padding: 5px; }
+  .tile strong { font-size: 1.5rem; }
+  .tile span { font-size: .78rem; }
+  .bars { grid-template-columns: 1fr; }
   .sent li { grid-template-columns: 1fr auto; }
   .sent-when { grid-row: 2; font-size: .82rem; }
   .sent li .btn { grid-row: 1 / span 2; grid-column: 2; }
@@ -398,6 +439,6 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sun, .panel, .horizon svg, .horizon svg *, .empty-art .steam, .is-launching .icon-rocket, .panel-done .icon { animation: none; }
+  .sun, .panel, .bar-fill, .horizon svg, .horizon svg *, .empty-art .steam, .is-launching .icon-rocket, .panel-done .icon { animation: none; }
   .btn, .btn-icon .icon, .board-panel, .card-summary { transition: none; }
 }

@@ -2,13 +2,22 @@ import Horizon from '@/components/Horizon';
 import BriefBoard from '@/components/BriefBoard';
 import RunButton from '@/components/RunButton';
 import SentList from '@/components/SentList';
-import { QuietMorning } from '@/components/Doodles';
+import { QuietMorning, RoundIcon, PenIcon, PlaneIcon } from '@/components/Doodles';
 import { sql, ensureSchema } from '@/lib/db';
 import { testRecipient } from '@/lib/resend';
 import { iso } from '@/lib/util';
 import { getUsdInr, inrLabel, rupeesInText } from '@/lib/money';
 import { archiveStaleDrafts } from '@/lib/pipeline';
 import { ARCHIVE_DAYS, NEW_HOURS, isNew, nextCheckLabel } from '@/lib/schedule';
+
+function parseParts(raw) {
+  try {
+    const p = JSON.parse(raw || 'null');
+    return p && typeof p === 'object' ? p : null;
+  } catch {
+    return null;
+  }
+}
 
 function parseBios(raw) {
   try {
@@ -32,14 +41,16 @@ async function load() {
     SELECT d.id, d.to_email, d.founders, d.website, d.research_notes, d.subject, d.body,
            d.about, d.founded, d.hq, d.founder_bios,
            s.name, s.one_liner, s.sector, s.location, s.round_type, s.amount, s.investors, s.announced_at,
-           s.source_url, s.source_name, s.fit_score, s.fit_reason
+           s.source_url, s.source_name, s.fit_score, s.fit_reason, s.fit_parts
     FROM drafts d JOIN startups s ON s.id = d.startup_id
     WHERE d.status = 'draft' OR (d.status = 'sending' AND d.sending_at < now() - interval '5 minutes')
     ORDER BY s.announced_at DESC NULLS LAST, s.fit_score DESC`;
   const [run] = await sql`SELECT * FROM runs WHERE finished_at IS NOT NULL ORDER BY id DESC LIMIT 1`;
   const [thesis] = await sql`SELECT sender_name FROM thesis WHERE id = 1`;
-  const [{ sent, replied }] = await sql`
-    SELECT count(*)::int AS sent, count(replied_at)::int AS replied FROM drafts WHERE status = 'sent'`;
+  const [{ sent, replied, sent_week }] = await sql`
+    SELECT count(*)::int AS sent, count(replied_at)::int AS replied,
+           count(*) FILTER (WHERE sent_at >= now() - interval '7 days')::int AS sent_week
+    FROM drafts WHERE status = 'sent'`;
   const sentList = await sql`
     SELECT d.id, s.name, d.sent_at, d.replied_at
     FROM drafts d JOIN startups s ON s.id = d.startup_id
@@ -58,12 +69,14 @@ async function load() {
         subject: inr(d.subject),
         body: inr(d.body),
         founder_bios: parseBios(d.founder_bios).map((b) => ({ ...b, background: inr(b.background) })),
+        fit_parts: parseParts(d.fit_parts),
       };
     }),
     run,
     name: thesis?.sender_name || 'Rohit',
     sent,
     replied,
+    sentWeek: sent_week,
     sentList: sentList.map((d) => ({
       id: d.id,
       name: d.name,
@@ -167,6 +180,24 @@ export default async function Home() {
                 Test mode is on. Sent emails go to {testTo} instead of founders, with the founder’s address in the subject.
               </p>
             )}
+
+            <ul className="tiles" aria-label="At a glance">
+              <li className="tile tile-new">
+                <RoundIcon round="seed" />
+                <strong>{newCount}</strong>
+                <span>New today</span>
+              </li>
+              <li className="tile tile-waiting">
+                <PenIcon />
+                <strong>{data.drafts.length}</strong>
+                <span>Waiting in your folder</span>
+              </li>
+              <li className="tile tile-sent">
+                <PlaneIcon />
+                <strong>{data.sentWeek}</strong>
+                <span>Sent this week</span>
+              </li>
+            </ul>
 
             {data.drafts.length > 0 && (
               <BriefBoard

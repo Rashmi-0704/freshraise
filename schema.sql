@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS startups (
   id SERIAL PRIMARY KEY, name_key TEXT UNIQUE NOT NULL, name TEXT NOT NULL, sector TEXT, location TEXT,
   round_type TEXT, amount TEXT, investors TEXT, indian_link TEXT, one_liner TEXT, announced_at TIMESTAMPTZ,
   source_url TEXT, source_title TEXT, source_name TEXT, fit_score INT, fit_reason TEXT,
+  fit_parts TEXT, -- JSON {sector, stage, geography, round_size}, each 0-5
   status TEXT NOT NULL DEFAULT 'new', created_at TIMESTAMPTZ DEFAULT now()
 );
 CREATE TABLE IF NOT EXISTS drafts (

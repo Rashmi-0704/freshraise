@@ -45,7 +45,9 @@ All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted
   amount in ₹, fit score, a one-line description, and a ring counting down the days before the draft is archived
   (7 days after the announcement, by the article's publish date). Click one and its company background,
   the founders you're writing to, and the editable email open in a panel on the right, so there's no long scrolling.
-  On a phone the panel slides in over the list.
+  On a phone the panel slides in over the list. Three tiles on top show **New today · Waiting · Sent this week**.
+  In the panel, four bars show the score breakdown (sector, stage, geography, round size, each 0-5), and each
+  founder has a **Find on LinkedIn** link.
 - **Sent so far** (on the Morning Brief): every email sent, a **Mark replied** button, and the reply rate.
 - **Thesis** (`/thesis`): sectors, stages, geography, round size, exclusions, minimum fit score and program pitch.
   **Re-score with this thesis** applies a changed thesis to the startups already waiting: drafts that no longer fit
