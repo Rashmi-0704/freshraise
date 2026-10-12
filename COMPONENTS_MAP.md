@@ -21,7 +21,7 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 | AI | Screen | **Gemini Flash** (`gemini-3.8-flash`, `lib/gemini.js`) | Picks real pre-seed / seed / angel rounds with an Indian link, in one request | ✅ |
 | Dedupe | Never twice | **Neon Postgres** | Startup name key is UNIQUE; a website can only ever have one draft | ✅ Tested (5 of 5 repeats blocked) |
 | Context | Thesis | `thesis` table in Neon | Sectors, stages, geography, round size (₹), exclusions, minimum score; read fresh every run | ✅ Tested (65 → 90 changed results, no code edit) |
-| AI | Score | **Gemini Flash** | Scores 0-100 with a fixed scale and a one-sentence reason, plus a 0-5 rating for each check (sector, stage, geography, round size) shown as bars; below the minimum is hidden | ✅ |
+| AI | Score | **Gemini Flash** | Scores 0-100 with a fixed scale and a one-sentence reason, plus a 0-5 rating for each check (sector, stage, geography, round size) shown as bars. Hidden if below the minimum **or** if any check is 0/5 (a hard fail, e.g. round size out of range) | ✅ Tested (Desible.ai, round size 0/5, hidden at 65) |
 | AI | Research + draft | **Gemini Flash + Google Search** | Finds website, company background, founders with roles and backgrounds, then writes a short email | ✅ |
 | Context | Rupees | **Frankfurter** (free, no key, ECB rates; `lib/money.js`) | Converts dollar amounts to ₹ crore / lakh at today's rate | ✅ |
 | Storage | Everything | **Neon Postgres** (replaces Supabase, approved) | `thesis`, `articles`, `startups`, `drafts`, `runs` tables, created automatically | ✅ |
@@ -104,7 +104,7 @@ README under **Reliability safeguards**.
 | Emails via Resend | `lib/resend.js` |
 | Free tiers only | See Cost above |
 | Never draft the same startup twice | `startups.name_key` UNIQUE, `drafts.startup_id` UNIQUE, `drafts.domain` unique index |
-| Non-fitting startups never shown | Only `drafts` with status `draft` are listed; rejected startups never get a draft, and a re-score hides drafts that stop fitting (`set_aside`) |
+| Non-fitting startups never shown | A startup needs the minimum score **and** no 0/5 check (`scoreStartups` in `lib/pipeline.js`); only `drafts` with status `draft` are listed; rejected startups never get a draft, and a re-score hides drafts that stop fitting (`set_aside`) |
 | Thesis editable without code | `thesis` table (Thesis page or Neon SQL editor), read on every run |
 | No keys in code | Everything comes from environment variables; `.env*` is gitignored |
 

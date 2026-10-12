@@ -133,6 +133,31 @@ function ScoreBars({ parts }) {
   );
 }
 
+// Company logo from Google's free favicon service (no key). Falls back to an initial in a circle
+// when there's no website or the image can't load.
+function Logo({ domain, name, size = 'sm' }) {
+  const [failed, setFailed] = useState(false);
+  if (!domain || failed) {
+    return (
+      <span className={`logo logo-${size} logo-initial`} aria-hidden="true">
+        {name.trim().charAt(0).toUpperCase()}
+      </span>
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      className={`logo logo-${size}`}
+      src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`}
+      alt=""
+      width={size === 'lg' ? 40 : 28}
+      height={size === 'lg' ? 40 : 28}
+      loading="lazy"
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 // A LinkedIn people search for the founder plus the company, so Rohit can check them in one click
 const linkedInSearch = (name, company) =>
   `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(`${name} ${company}`)}`;
@@ -157,7 +182,10 @@ function CardSummary({ draft, now, windowDays, active, result, onOpen }) {
       <span className="card-head">
         <SunRing announcedAt={draft.announced_at} now={now} windowDays={windowDays} />
         <span className="card-title">
-          <span className="card-name">{draft.name}</span>
+          <span className="card-name">
+            <Logo domain={draft.domain} name={draft.name} />
+            {draft.name}
+          </span>
           <span className="card-round">
             <span className="chip">
               <RoundIcon round={draft.round_type} />
@@ -214,7 +242,10 @@ function DraftPanel({ draft, hidden, testMode, result, onFinish, onClose }) {
     <article id={`panel-${draft.id}`} className="panel" hidden={hidden} aria-label={`${draft.name} details`}>
       <header className="panel-head">
         <div>
-          <h2>{draft.name}</h2>
+          <h2>
+            <Logo domain={draft.domain} name={draft.name} size="lg" />
+            {draft.name}
+          </h2>
           <p className="panel-sub">
             {[draft.round_type, draft.amount].filter(Boolean).join(' · ')}
             {draft.investors ? ` · backed by ${draft.investors}` : ''}

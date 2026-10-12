@@ -38,7 +38,7 @@ async function load() {
   await archiveStaleDrafts(); // the folder only holds announcements from the last ARCHIVE_DAYS days
   const usdInr = await getUsdInr();
   const drafts = await sql`
-    SELECT d.id, d.to_email, d.founders, d.website, d.research_notes, d.subject, d.body,
+    SELECT d.id, d.to_email, d.founders, d.website, d.domain, d.research_notes, d.subject, d.body,
            d.about, d.founded, d.hq, d.founder_bios,
            s.name, s.one_liner, s.sector, s.location, s.round_type, s.amount, s.investors, s.announced_at,
            s.source_url, s.source_name, s.fit_score, s.fit_reason, s.fit_parts

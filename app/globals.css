@@ -326,6 +326,18 @@ h1 {
 .bar-low { --c: var(--dusk); }
 @keyframes grow { from { width: 0; } }
 
+/* Company logos (favicon, or an initial when there's none) */
+.card-name, .panel-head h2 { display: flex; align-items: center; gap: 9px; min-width: 0; }
+.logo { flex: none; object-fit: contain; background: #fff; box-shadow: 0 0 0 1px var(--line); }
+.logo-sm { width: 28px; height: 28px; border-radius: 8px; padding: 3px; box-sizing: border-box; }
+.logo-lg { width: 40px; height: 40px; border-radius: 11px; padding: 5px; box-sizing: border-box; }
+.logo-initial {
+  display: grid; place-items: center; padding: 0; background: var(--glow); color: var(--ink);
+  font-weight: 800; box-shadow: inset 0 0 0 1.5px var(--ink);
+}
+.logo-sm.logo-initial { font-size: .85rem; border-radius: 50%; }
+.logo-lg.logo-initial { font-size: 1.15rem; border-radius: 50%; }
+
 /* Founder LinkedIn link */
 .people .linkedin {
   display: inline-flex; align-items: center; gap: 5px; margin-top: 4px;

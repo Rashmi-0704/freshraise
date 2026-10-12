@@ -29,7 +29,9 @@ and where each rule is enforced.
 2. **Filter.** Keeps articles from the last 24 hours that look like funding news and haven't been seen before.
 3. **Screen.** Gemini picks out real pre-seed / seed / angel rounds by Indian or Indian-founded startups.
 4. **Dedupe.** Each startup gets a normalised name key that is unique in the database. Already seen means skipped.
-5. **Score.** Gemini scores each startup 0 to 100 against the `thesis` table, read fresh every run. Below the minimum, it's hidden.
+5. **Score.** Gemini scores each startup 0 to 100 against the `thesis` table, read fresh every run, and rates four
+   checks (sector, stage, geography, round size) 0 to 5. Below the minimum score, or a 0/5 on any check (a hard
+   fail, such as a round outside the size range), and it's hidden.
 6. **Research and draft.** Gemini, grounded with Google Search, finds the website, company background and each founder's
    role and background, then writes the email. A website can only ever have one draft.
 7. **Morning email.** After the 6 am run, Rohit gets a short email listing the drafts waiting (or a warning if the run failed).
@@ -46,7 +48,8 @@ All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted
   (7 days after the announcement, by the article's publish date). Click one and its company background,
   the founders you're writing to, and the editable email open in a panel on the right, so there's no long scrolling.
   On a phone the panel slides in over the list. Three tiles on top show **New today · Waiting · Sent this week**.
-  In the panel, four bars show the score breakdown (sector, stage, geography, round size, each 0-5), and each
+  Each card and the panel header show the company's logo (Google's free favicon service; an initial if there's
+  none). In the panel, four bars show the score breakdown (sector, stage, geography, round size, each 0-5), and each
   founder has a **Find on LinkedIn** link.
 - **Sent so far** (on the Morning Brief): every email sent, a **Mark replied** button, and the reply rate.
 - **Thesis** (`/thesis`): sectors, stages, geography, round size, exclusions, minimum fit score and program pitch.
