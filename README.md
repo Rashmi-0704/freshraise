@@ -8,7 +8,8 @@ Startups that don't fit are never shown. No startup is ever drafted twice.
 
 **Live:** https://freshraise.vercel.app · **Code:** https://github.com/Rashmi-0704/freshraise
 
-See [COMPONENTS_MAP.md](./COMPONENTS_MAP.md) for the component map, the 9 reliability checks and where each rule is enforced.
+See [COMPONENTS_MAP.md](./COMPONENTS_MAP.md) for the component map, the Nine Checks (does this deserve to be built?)
+and where each rule is enforced.
 
 ## Stack (all free tiers, ₹0)
 
@@ -106,9 +107,29 @@ remove `RESEND_TEST_TO` to send to founders directly.
 - **Rupees:** every amount is shown in ₹ crore / lakh.
 - **Gemini model** updated to `gemini-3.8-flash` (2.5 Flash is retired for new keys).
 - **Feeds:** Entrackr's feed moved to `/rss`; added ET Startups.
-- **The 9 reliability checks** in COMPONENTS_MAP.md (time limits, rate limits, cron lock, duplicate guards and more).
+- **Reliability safeguards** (below): time limits, rate limits, cron lock, duplicate guards and more.
 - **Fixes found in live testing:** database reads were cached by Next.js, scores varied between runs, pages were slow
   until the app moved to Singapore.
+
+## Reliability safeguards
+
+Found while reviewing the starting code and fixed before deploying, so a run never stops halfway or contacts anyone twice.
+
+| Risk | How it's handled | Where |
+|---|---|---|
+| Vercel stops the function mid-run | Every Gemini call has a deadline; 300s limit; the run stops itself 30s early and leftovers are drafted next run | `lib/gemini.js`, `lib/pipeline.js` |
+| Gemini free-tier 429 errors | Calls spaced to `GEMINI_RPM`; waits as long as Gemini asks; stops cleanly when the daily quota is used up | `lib/gemini.js` |
+| The Gemini model is retired | Uses `gemini-3.8-flash`; drops the "thinking" setting if a model rejects it | `lib/gemini.js` |
+| Strangers trigger the cron | `/api/cron` refuses to run without `CRON_SECRET` | `app/api/cron/route.js` |
+| Anyone can use the public site | Optional password with `APP_PASSWORD` | `middleware.js` |
+| News slips between daily runs | 26-hour lookback; seen URLs are skipped, so overlap is safe | `lib/pipeline.js` |
+| Double or stuck sends | Lock before sending (released after 5 minutes if a send crashed); Resend idempotency key | `app/actions.js`, `lib/resend.js` |
+| Same startup under two names | Normalised name key, plus one draft per website domain | `lib/util.js`, `lib/db.js` |
+| Killed or overlapping runs | Stale runs closed after 10 minutes; only one run at a time | `lib/pipeline.js` |
+
+Also fixed during live testing: Entrackr's feed moved (now `/rss`), Next.js was caching database reads (now
+`no-store`), scores varied between runs (fixed scale, temperature 0), and the app moved to Singapore next to the
+database (pages went from about 5s to under 1s).
 
 ## Troubleshooting
 

@@ -40,25 +40,34 @@ Vercel Cron (6 am IST) ─┐
 **Cost:** ₹0. Every tool runs on a free tier with no credit card: Gemini (AI Studio), Neon, Resend, Vercel Hobby,
 GitHub, RSS feeds and Frankfurter.
 
-## The 9 reliability checks
+## The Nine Checks: does this deserve to be built?
 
-Found while reviewing the code (Step 1) and fixed before deploying, so a run never stops halfway or contacts anyone twice.
+### ⚡ Kill switches (any No means: don't build it)
 
-| # | Check | What could go wrong | How it's handled | Where |
-|---|---|---|---|---|
-| 1 | Time limit | Vercel stops the function mid-run | Every Gemini call has a deadline; 300s function limit; the run stops itself 30s early and leftovers are drafted next run | `lib/gemini.js`, `lib/pipeline.js` |
-| 2 | Gemini free-tier limits | 429 "too many requests" errors | Calls spaced to `GEMINI_RPM`; waits as long as Gemini asks; stops cleanly when the daily quota is used up | `lib/gemini.js` |
-| 3 | Model changes | The old model is retired | Uses `gemini-3.8-flash`; drops the "thinking" setting automatically if a model rejects it | `lib/gemini.js` |
-| 4 | Open cron endpoint | Strangers trigger runs and use up the quota | `/api/cron` refuses to run without `CRON_SECRET` | `app/api/cron/route.js` |
-| 5 | Public site | Anyone can run, edit or send | Optional password with `APP_PASSWORD` (off by default) | `middleware.js` |
-| 6 | Missed news | The cron fires late in its hour, articles slip between runs | 26-hour lookback; overlap is safe because seen URLs are skipped | `lib/pipeline.js` |
-| 7 | Double or stuck sends | A double click or crash sends twice or leaves a draft stuck | Lock before sending, released after 5 minutes if it crashed; Resend idempotency key | `app/actions.js`, `lib/resend.js` |
-| 8 | Same startup, two names | "Krishi Labs" and "KrishiLabs AI" both get drafts | Normalised name key, plus one draft per website domain | `lib/util.js`, `lib/db.js` |
-| 9 | Killed or overlapping runs | A killed run blocks the next; two runs overlap | Stale runs closed after 10 minutes; only one run at a time | `lib/pipeline.js` |
+| # | Check | Answer | Evidence |
+|---|---|---|---|
+| 01 | Problem real? | ✅ Yes | Founders are easiest to reach right after a raise, and Rohit currently finds them by reading the news by hand every morning. Missing the window means another accelerator gets there first. |
+| 02 | Workflow repeated? | ✅ Yes | Every single morning, the same steps: read the news, spot seed rounds, check fit, research, write. In testing, one week of news had at least 9 Indian pre-seed / seed rounds. |
+| 03 | Input available? | ✅ Yes | 10 free, keyless, live RSS feeds return about 190 articles per run (all 10 tested working). Google Search grounding fills in founders and background. |
 
-Also fixed during live testing: Entrackr's feed moved (now `/rss`), Next.js was caching database reads (now `no-store`),
-scores varied between runs (fixed scale, temperature 0), and the app moved to Singapore next to the database
-(pages went from about 5s to under 1s).
+### 📊 Sizing (any No means: build something smaller)
+
+| # | Check | Answer | Evidence |
+|---|---|---|---|
+| 04 | Output valuable? | ✅ Yes | Rohit gets a ready-to-send email plus the company background, the founders' roles and past companies, and a fit score with a reason. He only reviews, edits and clicks Send. |
+| 05 | Impact measurable? | ✅ Yes | Every run is logged in the `runs` table (articles read, rounds found, set aside, duplicates, drafted). The `drafts` table records sent vs skipped, so the share of drafts Rohit actually sends can be tracked. Not yet tracked: founder replies (Resend doesn't see replies). |
+| 08 | ROI worth it? | ✅ Yes | Running cost is ₹0 (all free tiers). It replaces the daily news reading and the per-startup research. The time saved is an estimate to confirm with Rohit, and it scales with how many rounds are announced. |
+
+### 🚧 Boundary (any No means: put a human exactly here)
+
+| # | Check | Answer | Where the human sits |
+|---|---|---|---|
+| 06 | Failure risk OK? | ✅ Yes, with a human at Send | The worst case is a wrong or awkward cold email, so **nothing is sent without Rohit clicking Send**. Test mode routes every email to our own inbox. A startup the AI wrongly rejects is only a missed lead, and Rohit can lower `min_fit_score` to see more. |
+| 07 | Judgment protected? | ✅ Yes | AI only finds, scores and drafts. **Rohit decides** who fits (he owns the thesis), whether to contact them, and what the email says (he can edit or skip). The AI never sends on its own. |
+| 09 | Owner clear? | ✅ Yes | **Rohit** owns the thesis and every send. **The builder (Rashmi)** owns the system: API keys, feeds and the daily cron. If a run fails, the Morning Brief shows "Last check hit a problem" with the reason, and the `runs` table keeps the history. |
+
+Technical safeguards that keep the daily run reliable (time limits, rate limits, duplicate guards) are listed in the
+README under **Reliability safeguards**.
 
 ## Hard rules: where they're enforced
 
