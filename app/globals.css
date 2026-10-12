@@ -174,6 +174,25 @@ h1 {
   background: #e9f4ea; color: #2f5d36; box-shadow: inset 0 0 0 1px #c3e0c6; font-size: .86rem; font-weight: 700;
 }
 .amount { font-weight: 800; letter-spacing: -0.01em; }
+.card-oneliner { font-size: .95rem; color: var(--ink); opacity: .85; margin: 2px 0 1px; }
+
+/* Company background, shown above the email when a card is open */
+.dossier { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+.dossier-box { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
+.dossier-box h3 { display: flex; align-items: center; gap: 7px; margin: 0 0 8px; font-size: .95rem; }
+.dossier-box p { margin: 0; font-size: .93rem; color: var(--ink); }
+.facts { display: grid; grid-template-columns: auto 1fr; gap: 3px 12px; margin: 10px 0 0; font-size: .88rem; }
+.facts dt { color: var(--muted); }
+.facts dd { margin: 0; font-weight: 500; }
+.people { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.people li { display: grid; grid-template-columns: 32px 1fr; gap: 10px; align-items: start; font-size: .9rem; }
+.people strong, .people .role, .people .bio { display: block; }
+.people .role { color: var(--sun-deep); font-weight: 500; font-size: .85rem; }
+.people .bio { color: var(--muted); font-size: .85rem; }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--glow); box-shadow: inset 0 0 0 1.5px var(--ink); font-weight: 800; font-size: .9rem;
+}
 .card-meta { color: var(--muted); font-size: .92rem; }
 .score {
   display: grid; justify-items: center; line-height: 1;
@@ -293,6 +312,7 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
   .ring, .ring svg { width: 48px; height: 48px; }
   .reason { margin: 4px 16px 16px; }
   .letter { padding: 18px 16px 20px; }
+  .dossier { grid-template-columns: 1fr; }
   .trow { grid-template-columns: 1fr; }
   fieldset { padding: 18px; }
 }

@@ -5,6 +5,16 @@ import { QuietMorning } from '@/components/Doodles';
 import { sql, ensureSchema } from '@/lib/db';
 import { testRecipient } from '@/lib/resend';
 import { iso } from '@/lib/util';
+import { getUsdInr, inrLabel, rupeesInText } from '@/lib/money';
+
+function parseBios(raw) {
+  try {
+    const list = JSON.parse(raw || '[]');
+    return Array.isArray(list) ? list : [];
+  } catch {
+    return [];
+  }
+}
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 300; // the "Check for new rounds" button runs the pipeline from this page
@@ -13,9 +23,11 @@ const IST = 'Asia/Kolkata';
 
 async function load() {
   await ensureSchema();
+  const usdInr = await getUsdInr();
   const drafts = await sql`
     SELECT d.id, d.to_email, d.founders, d.website, d.research_notes, d.subject, d.body,
-           s.name, s.sector, s.location, s.round_type, s.amount, s.investors, s.announced_at,
+           d.about, d.founded, d.hq, d.founder_bios,
+           s.name, s.one_liner, s.sector, s.location, s.round_type, s.amount, s.investors, s.announced_at,
            s.source_url, s.source_name, s.fit_score, s.fit_reason
     FROM drafts d JOIN startups s ON s.id = d.startup_id
     WHERE d.status = 'draft' OR (d.status = 'sending' AND d.sending_at < now() - interval '5 minutes')
@@ -24,7 +36,20 @@ async function load() {
   const [thesis] = await sql`SELECT sender_name FROM thesis WHERE id = 1`;
   const [{ sent }] = await sql`SELECT count(*)::int AS sent FROM drafts WHERE status = 'sent'`;
   return {
-    drafts: drafts.map((d) => ({ ...d, announced_at: iso(d.announced_at) })),
+    drafts: drafts.map((d) => {
+      const inr = (text) => rupeesInText(text, usdInr); // every amount is shown in rupees, never dollars
+      return {
+        ...d,
+        announced_at: iso(d.announced_at),
+        amount: inrLabel(d.amount, usdInr),
+        fit_reason: inr(d.fit_reason),
+        about: inr(d.about),
+        research_notes: inr(d.research_notes),
+        subject: inr(d.subject),
+        body: inr(d.body),
+        founder_bios: parseBios(d.founder_bios).map((b) => ({ ...b, background: inr(b.background) })),
+      };
+    }),
     run,
     name: thesis?.sender_name || 'Rohit',
     sent,

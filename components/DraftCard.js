@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import SunRing from './SunRing';
-import { RoundIcon, PlaneIcon } from './Doodles';
+import { RoundIcon, PlaneIcon, BuildingIcon, PeopleIcon } from './Doodles';
 import { sendDraft, skipDraft } from '@/app/actions';
 
 export default function DraftCard({ draft, now, testMode }) {
@@ -53,6 +53,7 @@ export default function DraftCard({ draft, now, testMode }) {
             {draft.amount && <span className="amount">{draft.amount}</span>}
             {draft.investors ? ` backed by ${draft.investors}` : ''}
           </span>
+          {draft.one_liner && <span className="card-oneliner">{draft.one_liner}</span>}
           <span className="card-meta">{[draft.sector, draft.location].filter(Boolean).join(', ')}</span>
         </span>
         <span className="score" title="Fit with your thesis, out of 100">
@@ -64,6 +65,38 @@ export default function DraftCard({ draft, now, testMode }) {
 
       {open && (
         <div className="letter" id={id}>
+          <div className="dossier">
+            <section className="dossier-box">
+              <h3><BuildingIcon /> About the company</h3>
+              <p>{draft.about || draft.one_liner || 'No background found yet.'}</p>
+              <dl className="facts">
+                {draft.founded && (<><dt>Founded</dt><dd>{draft.founded}</dd></>)}
+                {(draft.hq || draft.location) && (<><dt>Based in</dt><dd>{draft.hq || draft.location}</dd></>)}
+                {draft.sector && (<><dt>Sector</dt><dd>{draft.sector}</dd></>)}
+                {draft.amount && (<><dt>Raised</dt><dd>{draft.amount}{draft.round_type ? `, ${draft.round_type}` : ''}</dd></>)}
+              </dl>
+            </section>
+            <section className="dossier-box">
+              <h3><PeopleIcon /> Who you’re writing to</h3>
+              {draft.founder_bios?.length > 0 ? (
+                <ul className="people">
+                  {draft.founder_bios.map((b) => (
+                    <li key={b.name}>
+                      <span className="avatar" aria-hidden="true">{b.name.trim().charAt(0)}</span>
+                      <span>
+                        <strong>{b.name}</strong>
+                        {b.role && <span className="role">{b.role}</span>}
+                        {b.background && <span className="bio">{b.background}</span>}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{draft.founders ? `Founders: ${draft.founders}` : 'Founder names weren’t found. The email greets the team.'}</p>
+              )}
+            </section>
+          </div>
+
           <label className="field">
             <span>To</span>
             <input
@@ -85,11 +118,10 @@ export default function DraftCard({ draft, now, testMode }) {
             aria-label="Email message"
           />
 
-          {(research.length > 0 || draft.founders || draft.website) && (
+          {research.length > 0 && (
             <div className="research">
               <h3>What the research found</h3>
               <ul>
-                {draft.founders && <li>Founders: {draft.founders}</li>}
                 {research.map((r, i) => (
                   <li key={i}>{r}</li>
                 ))}

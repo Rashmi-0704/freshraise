@@ -160,6 +160,26 @@ export function GiftIcon() {
   );
 }
 
+export function BuildingIcon() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" {...ink}>
+      <path d="M4 21 V8 L12 4 L20 8 V21Z" fill="var(--sky-low)" />
+      <path d="M2 21 H22 M10 21 V16 H14 V21 M8 10 H9 M15 10 H16 M8 13 H9 M15 13 H16" />
+    </svg>
+  );
+}
+
+export function PeopleIcon() {
+  return (
+    <svg className="icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" {...ink}>
+      <circle cx="9" cy="8" r="3.2" fill="var(--glow)" />
+      <path d="M3 20 C3 15.5 5.7 13.5 9 13.5 C12.3 13.5 15 15.5 15 20" fill="var(--glow)" />
+      <circle cx="16.5" cy="9" r="2.6" />
+      <path d="M16 13.6 C19 13.4 21 15.4 21 19" />
+    </svg>
+  );
+}
+
 /* ---------- Larger illustrations ---------- */
 
 // Empty state: coffee and the morning paper, nothing new yet

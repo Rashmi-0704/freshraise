@@ -18,7 +18,9 @@ CREATE TABLE IF NOT EXISTS startups (
 );
 CREATE TABLE IF NOT EXISTS drafts (
   id SERIAL PRIMARY KEY, startup_id INT UNIQUE NOT NULL REFERENCES startups(id) ON DELETE CASCADE,
-  to_email TEXT, founders TEXT, website TEXT, domain TEXT, research_notes TEXT, subject TEXT NOT NULL, body TEXT NOT NULL,
+  to_email TEXT, founders TEXT, website TEXT, domain TEXT, research_notes TEXT,
+  about TEXT, founded TEXT, hq TEXT, founder_bios TEXT, -- company background; founder_bios is JSON [{name, role, background}]
+  subject TEXT NOT NULL, body TEXT NOT NULL,
   status TEXT NOT NULL DEFAULT 'draft', resend_id TEXT, created_at TIMESTAMPTZ DEFAULT now(),
   sending_at TIMESTAMPTZ, sent_at TIMESTAMPTZ
 );
