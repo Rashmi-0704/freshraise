@@ -6,7 +6,11 @@ email ready for Rohit to approve. Startups that don't fit are never shown. No st
 
 **Live:** https://freshraise.vercel.app · **Code:** https://github.com/Rashmi-0704/freshraise
 
-## Component map
+![FreshRaise components map: actors (Scheduler, News & Rates, System, AI Model, Database, Rohit, Email, Founder) across Trigger, Input, Context, Processing, AI and Output](docs/components-map.svg)
+
+PNG version for slides: [docs/components-map.png](docs/components-map.png)
+
+## Component details
 
 | Step | Component | Tool | What it does | Status |
 |---|---|---|---|---|
