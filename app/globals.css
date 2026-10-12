@@ -167,6 +167,10 @@ h1 {
 .folder-group.is-pending { border-bottom-color: var(--line); color: var(--muted); }
 .folder-empty { margin: 0; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--line); color: var(--muted); font-size: .92rem; }
 .folder-note { margin: 10px 2px 0; color: var(--muted); font-size: .82rem; }
+.board-empty { grid-template-columns: minmax(0, 1fr); }
+.folder-empty-art { display: grid; justify-items: center; text-align: center; gap: 6px; padding: 22px 16px; background: var(--paper); }
+.folder-empty-art .hand { margin: 4px 0 0; }
+.folder-empty-art p:last-child { margin: 0; font-size: .85rem; }
 .card {
   background: var(--paper);
   border-radius: 16px;

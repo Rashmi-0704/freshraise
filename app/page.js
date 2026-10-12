@@ -2,7 +2,7 @@ import Horizon from '@/components/Horizon';
 import BriefBoard from '@/components/BriefBoard';
 import RunButton from '@/components/RunButton';
 import SentList from '@/components/SentList';
-import { QuietMorning, RoundIcon, PenIcon, PlaneIcon } from '@/components/Doodles';
+import { RoundIcon, PenIcon, PlaneIcon } from '@/components/Doodles';
 import { sql, ensureSchema } from '@/lib/db';
 import { testRecipient } from '@/lib/resend';
 import { iso } from '@/lib/util';
@@ -199,22 +199,13 @@ export default async function Home() {
               </li>
             </ul>
 
-            {data.drafts.length > 0 && (
-              <BriefBoard
-                drafts={data.drafts}
-                now={now}
-                testMode={Boolean(testTo)}
-                newHours={NEW_HOURS}
-                archiveDays={ARCHIVE_DAYS}
-              />
-            )}
-
-            {data.drafts.length === 0 && (
-              <div className="empty">
-                <QuietMorning className="empty-art" />
-                <p className="hand">Quiet morning. Your draft folder is empty, so enjoy the chai.</p>
-              </div>
-            )}
+            <BriefBoard
+              drafts={data.drafts}
+              now={now}
+              testMode={Boolean(testTo)}
+              newHours={NEW_HOURS}
+              archiveDays={ARCHIVE_DAYS}
+            />
 
             <SentList items={data.sentList} sentTotal={data.sent} repliedTotal={data.replied} />
           </>

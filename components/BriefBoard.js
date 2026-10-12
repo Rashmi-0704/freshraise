@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useTransition } from 'react';
 import SunRing from './SunRing';
-import { RoundIcon, PlaneIcon, BuildingIcon, PeopleIcon } from './Doodles';
+import { RoundIcon, PlaneIcon, BuildingIcon, PeopleIcon, QuietMorning } from './Doodles';
 import { sendDraft, skipDraft } from '@/app/actions';
 
 const WIDE = '(min-width: 900px)';
@@ -31,6 +31,25 @@ export default function BriefBoard({ drafts, now, testMode, newHours, archiveDay
     const next = drafts.find((d) => d.id !== id && !done[d.id]);
     if (result.status === 'skipped') setSelected(next ? next.id : null);
   };
+
+  // An empty folder still shows up, so Rohit always knows where his drafts will land
+  if (!drafts.length) {
+    return (
+      <div className="board board-empty">
+        <section className="folder" aria-label="Draft folder">
+          <h2 className="folder-title">Draft folder</h2>
+          <h3 className="folder-group">
+            New today <span>last {newHours} hours · 0</span>
+          </h3>
+          <div className="folder-empty folder-empty-art">
+            <QuietMorning className="empty-art" />
+            <p className="hand">Quiet morning. Your draft folder is empty, so enjoy the chai.</p>
+            <p>New drafts land here after the next check. Drafts leave the folder {archiveDays} days after the announcement.</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
 
   const fresh = drafts.filter((d) => d.is_new);
   const pending = drafts.filter((d) => !d.is_new);
