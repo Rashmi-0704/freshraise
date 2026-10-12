@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2023 1354" width="2023" height="1354" font-family="'Segoe UI', 'Inter', 'Helvetica Neue', Arial, sans-serif">
+<defs><marker id="head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#1e2a47"/></marker></defs>
+<rect width="2023" height="1354" fill="#ffffff"/>
+<text x="1011.5" y="60" text-anchor="middle" font-size="34" font-weight="700" fill="#1e2a47">FreshRaise · Funding Outreach — Components Map</text>
+<rect x="259" y="164" width="1740" height="140" fill="#eef0fb"/>
+<rect x="24" y="164" width="235" height="140" fill="#1e2a47"/>
+<text x="141.5" y="223" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">Scheduler</text>
+<text x="141.5" y="251" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(Vercel Cron)</text>
+<rect x="259" y="304" width="1740" height="140" fill="#eef4ff"/>
+<rect x="24" y="304" width="235" height="140" fill="#1e2a47"/>
+<line x1="24" y1="304" x2="259" y2="304" stroke="#34405f" stroke-width="1"/>
+<text x="141.5" y="350" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">News &amp; Rates</text>
+<text x="141.5" y="378" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(RSS feeds,</text>
+<text x="141.5" y="400" text-anchor="middle" font-size="16.5" fill="#c9d0e3">Frankfurter)</text>
+<rect x="259" y="444" width="1740" height="140" fill="#fff8e6"/>
+<rect x="24" y="444" width="235" height="140" fill="#1e2a47"/>
+<line x1="24" y1="444" x2="259" y2="444" stroke="#34405f" stroke-width="1"/>
+<text x="141.5" y="503" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">System</text>
+<text x="141.5" y="531" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(FreshRaise on Vercel)</text>
+<rect x="259" y="584" width="1740" height="140" fill="#e9f7ee"/>
+<rect x="24" y="584" width="235" height="140" fill="#1e2a47"/>
+<line x1="24" y1="584" x2="259" y2="584" stroke="#34405f" stroke-width="1"/>
+<text x="141.5" y="630" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">AI Model</text>
+<text x="141.5" y="658" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(Gemini Flash</text>
+<text x="141.5" y="680" text-anchor="middle" font-size="16.5" fill="#c9d0e3">via OpenRouter)</text>
+<rect x="259" y="724" width="1740" height="140" fill="#e8f5f8"/>
+<rect x="24" y="724" width="235" height="140" fill="#1e2a47"/>
+<line x1="24" y1="724" x2="259" y2="724" stroke="#34405f" stroke-width="1"/>
+<text x="141.5" y="783" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">Database</text>
+<text x="141.5" y="811" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(Neon Postgres)</text>
+<rect x="259" y="864" width="1740" height="140" fill="#fdf1ec"/>
+<rect x="24" y="864" width="235" height="140" fill="#1e2a47"/>
+<line x1="24" y1="864" x2="259" y2="864" stroke="#34405f" stroke-width="1"/>
+<text x="141.5" y="923" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">Rohit</text>
+<text x="141.5" y="951" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(Recruitment lead)</text>
+<rect x="259" y="1004" width="1740" height="140" fill="#fcebf2"/>
+<rect x="24" y="1004" width="235" height="140" fill="#1e2a47"/>
+<line x1="24" y1="1004" x2="259" y2="1004" stroke="#34405f" stroke-width="1"/>
+<text x="141.5" y="1063" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">Email</text>
+<text x="141.5" y="1091" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(Resend)</text>
+<rect x="259" y="1144" width="1740" height="140" fill="#eaf1fd"/>
+<rect x="24" y="1144" width="235" height="140" fill="#1e2a47"/>
+<line x1="24" y1="1144" x2="259" y2="1144" stroke="#34405f" stroke-width="1"/>
+<text x="141.5" y="1203" text-anchor="middle" font-size="23" font-weight="700" fill="#ffffff">Founder</text>
+<text x="141.5" y="1231" text-anchor="middle" font-size="16.5" fill="#c9d0e3">(Freshly funded startup)</text>
+<line x1="549" y1="94" x2="549" y2="1284" stroke="#d5dae6" stroke-width="1.2"/>
+<line x1="839" y1="94" x2="839" y2="1284" stroke="#d5dae6" stroke-width="1.2"/>
+<line x1="1129" y1="94" x2="1129" y2="1284" stroke="#d5dae6" stroke-width="1.2"/>
+<line x1="1419" y1="94" x2="1419" y2="1284" stroke="#d5dae6" stroke-width="1.2"/>
+<line x1="1709" y1="94" x2="1709" y2="1284" stroke="#d5dae6" stroke-width="1.2"/>
+<path d="M36 94 H1987 Q1999 94 1999 106 V164 H24 V106 Q24 94 36 94Z" fill="#1e2a47"/>
+<text x="141.5" y="137" text-anchor="middle" font-size="23" font-weight="600" fill="#ffffff">Actor</text>
+<line x1="259" y1="94" x2="259" y2="164" stroke="#34405f" stroke-width="1"/>
+<text x="404" y="137" text-anchor="middle" font-size="23" font-weight="600" fill="#ffffff">Trigger</text>
+<line x1="549" y1="94" x2="549" y2="164" stroke="#34405f" stroke-width="1"/>
+<text x="694" y="137" text-anchor="middle" font-size="23" font-weight="600" fill="#ffffff">Input</text>
+<line x1="839" y1="94" x2="839" y2="164" stroke="#34405f" stroke-width="1"/>
+<text x="984" y="137" text-anchor="middle" font-size="23" font-weight="600" fill="#ffffff">Context</text>
+<line x1="1129" y1="94" x2="1129" y2="164" stroke="#34405f" stroke-width="1"/>
+<text x="1274" y="137" text-anchor="middle" font-size="23" font-weight="600" fill="#ffffff">Processing</text>
+<line x1="1419" y1="94" x2="1419" y2="164" stroke="#34405f" stroke-width="1"/>
+<text x="1564" y="137" text-anchor="middle" font-size="23" font-weight="600" fill="#ffffff">AI</text>
+<line x1="1709" y1="94" x2="1709" y2="164" stroke="#34405f" stroke-width="1"/>
+<text x="1854" y="137" text-anchor="middle" font-size="23" font-weight="600" fill="#ffffff">Output</text>
+<path d="M364 293 L364 514 L1154 514" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M694 433 L694 482 L1154 482" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M444 875 L444 546 L1154 546" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1104 374 L1514 374 L1514 595" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1324 573 L1324 654 L1444 654" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M984 735 L984 676 L1224 676 L1224 573" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1104 794 L1564 794 L1564 713" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M984 875 L984 853" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1614 595 L1614 514 L1734 514" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1854 573 L1854 875" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1684 624 L1987 624 L1987 374 L1976 374" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1854 993 L1854 1015" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<path d="M1854 1133 L1854 1155" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
+<rect x="284" y="175" width="240" height="118" rx="12" fill="#e3e5fb" stroke="#5b5bd6" stroke-width="2.2"/>
+<text x="404" y="202.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Vercel Cron fires</text>
+<text x="404" y="227.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">every day at 6:00 am</text>
+<text x="404" y="252.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">IST; the page shows</text>
+<text x="404" y="277.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">the next check</text>
+<rect x="284" y="875" width="240" height="118" rx="12" fill="#ffe1d5" stroke="#e8743b" stroke-width="2.2"/>
+<text x="404" y="915" text-anchor="middle" font-size="17.5" fill="#1e2a47">Clicks “Check for</text>
+<text x="404" y="940" text-anchor="middle" font-size="17.5" fill="#1e2a47">new rounds” at</text>
+<text x="404" y="965" text-anchor="middle" font-size="17.5" fill="#1e2a47">any time</text>
+<rect x="574" y="315" width="240" height="118" rx="12" fill="#ffffff" stroke="#5b8def" stroke-width="2.2"/>
+<text x="694" y="342.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">10 live RSS feeds:</text>
+<text x="694" y="367.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Google News, Inc42,</text>
+<text x="694" y="392.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Entrackr, ET Startups,</text>
+<text x="694" y="417.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">YourStory, TechCrunch</text>
+<rect x="864" y="315" width="240" height="118" rx="12" fill="#ffffff" stroke="#5b8def" stroke-width="2.2"/>
+<text x="984" y="355" text-anchor="middle" font-size="17.5" fill="#1e2a47">Frankfurter: today’s</text>
+<text x="984" y="380" text-anchor="middle" font-size="17.5" fill="#1e2a47">USD → INR rate, so</text>
+<text x="984" y="405" text-anchor="middle" font-size="17.5" fill="#1e2a47">every amount is in ₹</text>
+<rect x="864" y="735" width="240" height="118" rx="12" fill="#d3eef3" stroke="#1c97ad" stroke-width="2.2"/>
+<text x="984" y="775" text-anchor="middle" font-size="17.5" fill="#1e2a47">Thesis row, plus</text>
+<text x="984" y="800" text-anchor="middle" font-size="17.5" fill="#1e2a47">memory of every seen</text>
+<text x="984" y="825" text-anchor="middle" font-size="17.5" fill="#1e2a47">URL and past startup</text>
+<rect x="864" y="875" width="240" height="118" rx="12" fill="#ffe1d5" stroke="#e8743b" stroke-width="2.2"/>
+<text x="984" y="902.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Sets the thesis</text>
+<text x="984" y="927.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">(₹ round size, min score)</text>
+<text x="984" y="952.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">and re-scores the</text>
+<text x="984" y="977.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">startups waiting</text>
+<rect x="1154" y="455" width="240" height="118" rx="12" fill="#fff1c2" stroke="#d9a400" stroke-width="2.2"/>
+<text x="1274" y="482.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Keeps last 24h,</text>
+<text x="1274" y="507.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">funding news, unseen</text>
+<text x="1274" y="532.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">URLs; blocks repeat</text>
+<text x="1274" y="557.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">names + websites</text>
+<rect x="1444" y="595" width="240" height="118" rx="12" fill="#d6f3e0" stroke="#2fa35a" stroke-width="2.2"/>
+<text x="1564" y="616" text-anchor="middle" font-size="16.5" fill="#1e2a47">Screens seed rounds,</text>
+<text x="1564" y="638" text-anchor="middle" font-size="16.5" fill="#1e2a47">scores 4 checks (0–5);</text>
+<text x="1564" y="660" text-anchor="middle" font-size="16.5" fill="#1e2a47">any 0/5 hides it,</text>
+<text x="1564" y="682" text-anchor="middle" font-size="16.5" fill="#1e2a47">researches founders,</text>
+<text x="1564" y="704" text-anchor="middle" font-size="16.5" fill="#1e2a47">drafts the email</text>
+<rect x="1734" y="455" width="240" height="118" rx="12" fill="#fff1c2" stroke="#d9a400" stroke-width="2.2"/>
+<text x="1854" y="476" text-anchor="middle" font-size="16.5" fill="#1e2a47">Draft folder: logos,</text>
+<text x="1854" y="498" text-anchor="middle" font-size="16.5" fill="#1e2a47">tiles, New today (24h)</text>
+<text x="1854" y="520" text-anchor="middle" font-size="16.5" fill="#1e2a47">/ Pending, score bars,</text>
+<text x="1854" y="542" text-anchor="middle" font-size="16.5" fill="#1e2a47">founders + LinkedIn;</text>
+<text x="1854" y="564" text-anchor="middle" font-size="16.5" fill="#1e2a47">archived after 7 days</text>
+<rect x="1734" y="875" width="240" height="118" rx="12" fill="#ffe1d5" stroke="#e8743b" stroke-width="3.4"/>
+<text x="1854" y="902.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Approves in the folder:</text>
+<text x="1854" y="927.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Send = approve, or Skip;</text>
+<text x="1854" y="952.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">marks replies. Nothing</text>
+<text x="1854" y="977.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">sends without him</text>
+<text x="1718" y="930" text-anchor="end" font-size="16" font-weight="800" fill="#e8743b">HUMAN</text>
+<text x="1718" y="950" text-anchor="end" font-size="16" font-weight="800" fill="#e8743b">BOUNDARY →</text>
+<rect x="1734" y="1015" width="240" height="118" rx="12" fill="#fbd5e5" stroke="#d6457f" stroke-width="2.2"/>
+<text x="1854" y="1042.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">6 am summary to Rohit;</text>
+<text x="1854" y="1067.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">sends each approved</text>
+<text x="1854" y="1092.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">email; startup never</text>
+<text x="1854" y="1117.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">drafted again</text>
+<rect x="1734" y="1155" width="240" height="118" rx="12" fill="#fde3dc" stroke="#e0533d" stroke-width="2.2"/>
+<text x="1854" y="1195" text-anchor="middle" font-size="17.5" fill="#1e2a47">Gets a personal</text>
+<text x="1854" y="1220" text-anchor="middle" font-size="17.5" fill="#1e2a47">email right after</text>
+<text x="1854" y="1245" text-anchor="middle" font-size="17.5" fill="#1e2a47">the raise</text>
+<rect x="1734" y="315" width="240" height="118" rx="12" fill="#ffffff" stroke="#5b8def" stroke-width="2.2"/>
+<text x="1854" y="336" text-anchor="middle" font-size="16.5" fill="#1e2a47">Pulse page: Gemini’s</text>
+<text x="1854" y="358" text-anchor="middle" font-size="16.5" fill="#1e2a47">daily startup summary,</text>
+<text x="1854" y="380" text-anchor="middle" font-size="16.5" fill="#1e2a47">news (non-fits hidden),</text>
+<text x="1854" y="402" text-anchor="middle" font-size="16.5" fill="#1e2a47">rounds you missed,</text>
+<text x="1854" y="424" text-anchor="middle" font-size="16.5" fill="#1e2a47">your startups in news</text>
+<text x="1011.5" y="1326" text-anchor="middle" font-size="17" fill="#5e6688">Final version · 12 Oct 2026 · Dashed arrows show the flow of data · Gemini through OpenRouter, served by Google · freshraise.vercel.app</text>
+</svg>

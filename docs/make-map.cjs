@@ -1,18 +1,18 @@
-// Builds the FreshRaise swimlane components map (same layout as the Aangan reference).
+// Builds the SIMPLE FreshRaise components map (same swimlane layout as the Aangan reference).
+// The full version with every detail is docs/make-map-detailed.cjs.
 // Usage: node make-map.cjs <output.svg>
 const fs = require('fs');
 
-const X0 = 24, ACTOR_W = 235, COL_W = 290, HEAD_Y = 94, HEAD_H = 70, ROW_H = 140;
+const X0 = 24, ACTOR_W = 235, COL_W = 290, HEAD_Y = 94, HEAD_H = 70, ROW_H = 130;
 const COLS = ['Trigger', 'Input', 'Context', 'Processing', 'AI', 'Output'];
 const ROWS = [
   { name: 'Scheduler', sub: ['(Vercel Cron)'], bg: '#eef0fb', fill: '#e3e5fb', stroke: '#5b5bd6' },
-  { name: 'News & Rates', sub: ['(RSS feeds,', 'Frankfurter)'], bg: '#eef4ff', fill: '#ffffff', stroke: '#5b8def' },
-  { name: 'System', sub: ['(FreshRaise on Vercel)'], bg: '#fff8e6', fill: '#fff1c2', stroke: '#d9a400' },
-  { name: 'AI Model', sub: ['(Gemini Flash', 'via OpenRouter)'], bg: '#e9f7ee', fill: '#d6f3e0', stroke: '#2fa35a' },
-  { name: 'Database', sub: ['(Neon Postgres)'], bg: '#e8f5f8', fill: '#d3eef3', stroke: '#1c97ad' },
   { name: 'Rohit', sub: ['(Recruitment lead)'], bg: '#fdf1ec', fill: '#ffe1d5', stroke: '#e8743b' },
+  { name: 'News', sub: ['(10 RSS feeds)'], bg: '#eef4ff', fill: '#ffffff', stroke: '#5b8def' },
+  { name: 'FreshRaise', sub: ['(app on Vercel)'], bg: '#fff8e6', fill: '#fff1c2', stroke: '#d9a400' },
+  { name: 'AI', sub: ['(Gemini Flash)'], bg: '#e9f7ee', fill: '#d6f3e0', stroke: '#2fa35a' },
+  { name: 'Database', sub: ['(Neon)'], bg: '#e8f5f8', fill: '#d3eef3', stroke: '#1c97ad' },
   { name: 'Email', sub: ['(Resend)'], bg: '#fcebf2', fill: '#fbd5e5', stroke: '#d6457f' },
-  { name: 'Founder', sub: ['(Freshly funded startup)'], bg: '#eaf1fd', fill: '#fde3dc', stroke: '#e0533d' },
 ];
 
 const ROW_Y0 = HEAD_Y + HEAD_H;
@@ -20,42 +20,34 @@ const W = X0 + ACTOR_W + COL_W * COLS.length + X0;
 const H = ROW_Y0 + ROW_H * ROWS.length + 70;
 const cx = (c) => X0 + ACTOR_W + (c - 1) * COL_W + COL_W / 2;
 const cy = (r) => ROW_Y0 + (r - 1) * ROW_H + ROW_H / 2;
-const BW = 240, BH = 118;
+const BW = 240, BH = 96;
 const L = (c) => cx(c) - BW / 2, R = (c) => cx(c) + BW / 2;
 const T = (r) => cy(r) - BH / 2, B = (r) => cy(r) + BH / 2;
 
 // [row, col, lines, extra]
+// [row, col, lines, extra]: short words only, at most 3 lines
 const BOXES = [
-  [1, 1, ['Vercel Cron fires', 'every day at 6:00 am', 'IST; the page shows', 'the next check']],
-  [6, 1, ['Clicks “Check for', 'new rounds” at', 'any time']],
-  [2, 2, ['10 live RSS feeds:', 'Google News, Inc42,', 'Entrackr, ET Startups,', 'YourStory, TechCrunch']],
-  [2, 3, ['Frankfurter: today’s', 'USD → INR rate, so', 'every amount is in ₹']],
-  [5, 3, ['Thesis row, plus', 'memory of every seen', 'URL and past startup']],
-  [6, 3, ['Sets the thesis', '(₹ round size, min score)', 'and re-scores the', 'startups waiting']],
-  [3, 4, ['Keeps last 24h,', 'funding news, unseen', 'URLs; blocks repeat', 'names + websites']],
-  [4, 5, ['Screens seed rounds,', 'scores 4 checks (0–5);', 'any 0/5 hides it,', 'researches founders,', 'drafts the email']],
-  [3, 6, ['Draft folder: logos,', 'tiles, New today (24h)', '/ Pending, score bars,', 'founders + LinkedIn;', 'archived after 7 days']],
-  [6, 6, ['Approves in the folder:', 'Send = approve, or Skip;', 'marks replies. Nothing', 'sends without him'], { bold: true }],
-  [7, 6, ['6 am summary to Rohit;', 'sends each approved', 'email; startup never', 'drafted again']],
-  [8, 6, ['Gets a personal', 'email right after', 'the raise']],
-  [2, 6, ['Pulse page: Gemini’s', 'daily startup summary,', 'news (non-fits hidden),', 'rounds you missed,', 'your startups in news']],
+  [1, 1, ['Runs every day', 'at 6:00 am IST']],
+  [2, 1, ['Clicks “Check for', 'new rounds”']],
+  [3, 2, ['Live startup', 'funding news']],
+  [6, 3, ['Thesis set by Rohit', '+ memory, so no one', 'is contacted twice']],
+  [4, 4, ['Keeps new seed', 'rounds from the', 'last 24 hours']],
+  [5, 5, ['Scores the fit,', 'researches founders,', 'writes the email']],
+  [4, 6, ['Draft folder', '+ Pulse page']],
+  [2, 6, ['Reviews the draft', 'and clicks Send'], { bold: true }],
+  [7, 6, ['Sends the email', 'to the founder']],
 ];
 
-// Orthogonal dashed arrows as point lists
+// Orthogonal dashed arrows as point lists: one clear path from news to founder
 const ARROWS = [
-  [[cx(1) - 40, B(1)], [cx(1) - 40, cy(3)], [L(4), cy(3)]], // cron -> system
-  [[cx(2), B(2)], [cx(2), cy(3) - 32], [L(4), cy(3) - 32]], // feeds -> system
-  [[cx(1) + 40, T(6)], [cx(1) + 40, cy(3) + 32], [L(4), cy(3) + 32]], // button -> system
-  [[R(3), cy(2)], [cx(5) - 50, cy(2)], [cx(5) - 50, T(4)]], // rate -> gemini
-  [[cx(4) + 50, B(3)], [cx(4) + 50, cy(4)], [L(5), cy(4)]], // system -> gemini
-  [[cx(3), T(5)], [cx(3), cy(4) + 22], [cx(4) - 50, cy(4) + 22], [cx(4) - 50, B(3)]], // memory -> system
-  [[R(3), cy(5)], [cx(5), cy(5)], [cx(5), B(4)]], // thesis -> gemini
-  [[cx(3), T(6)], [cx(3), B(5)]], // rohit edits thesis
-  [[cx(5) + 50, T(4)], [cx(5) + 50, cy(3)], [L(6), cy(3)]], // gemini -> brief
-  [[cx(6), B(3)], [cx(6), T(6)]], // brief -> rohit
-  [[R(5), cy(4) - 30], [R(6) + 13, cy(4) - 30], [R(6) + 13, cy(2)], [R(6) + 2, cy(2)]], // gemini summary -> pulse
-  [[cx(6), B(6)], [cx(6), T(7)]], // rohit -> resend
-  [[cx(6), B(7)], [cx(6), T(8)]], // resend -> founder
+  [[R(1), cy(1)], [cx(4), cy(1)], [cx(4), T(4)]], // daily run -> app
+  [[cx(1), B(2)], [cx(1), cy(4) + 20], [L(4), cy(4) + 20]], // Rohit's check -> app
+  [[cx(2), B(3)], [cx(2), cy(4) - 20], [L(4), cy(4) - 20]], // news -> app
+  [[cx(4), B(4)], [cx(4), cy(5)], [L(5), cy(5)]], // app -> AI
+  [[R(3), cy(6)], [cx(5), cy(6)], [cx(5), B(5)]], // thesis + memory -> AI
+  [[cx(5), T(5)], [cx(5), cy(4)], [L(6), cy(4)]], // AI -> draft folder
+  [[cx(6), T(4)], [cx(6), B(2)]], // draft folder -> Rohit
+  [[R(6), cy(2)], [R(6) + 13, cy(2)], [R(6) + 13, cy(7)], [R(6) + 2, cy(7)]], // Rohit sends -> email
 ];
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -101,9 +93,9 @@ BOXES.forEach(([r, c, lines, extra = {}]) => {
   const row = ROWS[r - 1];
   const x = L(c), y = T(r);
   out.push(`<rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="12" fill="${row.fill}" stroke="${row.stroke}" stroke-width="${extra.bold ? 3.4 : 2.2}"/>`);
-  const step = lines.length > 4 ? 22 : 25; // 5-line boxes sit a little tighter
+  const step = 27; // bigger, easier-to-read text in the simple map
   const first = cy(r) - ((lines.length - 1) * step) / 2 + 6;
-  lines.forEach((t, k) => out.push(`<text x="${cx(c)}" y="${first + k * step}" text-anchor="middle" font-size="${lines.length > 4 ? 16.5 : 17.5}" fill="#1e2a47">${esc(t)}</text>`));
+  lines.forEach((t, k) => out.push(`<text x="${cx(c)}" y="${first + k * step}" text-anchor="middle" font-size="20" fill="#1e2a47">${esc(t)}</text>`));
   if (extra.bold) {
     // Label sits in the empty cell to the left, clear of the arrows
     out.push(`<text x="${L(c) - 16}" y="${cy(r) - 4}" text-anchor="end" font-size="16" font-weight="800" fill="${row.stroke}">HUMAN</text>`);
@@ -113,7 +105,7 @@ BOXES.forEach(([r, c, lines, extra = {}]) => {
 
 // Footer
 const fy = ROW_Y0 + ROW_H * ROWS.length + 42;
-out.push(`<text x="${W / 2}" y="${fy}" text-anchor="middle" font-size="17" fill="#5e6688">Final version · 12 Oct 2026 · Dashed arrows show the flow of data · Gemini through OpenRouter, served by Google · freshraise.vercel.app</text>`);
+out.push(`<text x="${W / 2}" y="${fy}" text-anchor="middle" font-size="17" fill="#5e6688">Dashed arrows show the flow · Nothing is sent without Rohit · freshraise.vercel.app</text>`);
 out.push(`</svg>`);
 fs.writeFileSync(process.argv[2], out.join('\n'));
 console.log(`wrote ${process.argv[2]} (${W}x${H})`);

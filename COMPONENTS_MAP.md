@@ -8,8 +8,11 @@ email ready for Rohit to approve. Startups that don't fit are never shown. No st
 
 ![FreshRaise components map: actors (Scheduler, News & Rates, System, AI Model, Database, Rohit, Email, Founder) across Trigger, Input, Context, Processing, AI and Output](docs/components-map.svg)
 
-PNG version for slides: [docs/components-map.png](docs/components-map.png) · **Final version, 12 Oct 2026.** Every box was
-checked against the code (27 of 27 claims match).
+PNG version for slides: [docs/components-map.png](docs/components-map.png) · **Final version, 12 Oct 2026.**
+
+This is the simple map: one path from the news to the founder. The detailed map, with every feature on it (rupee
+rates, score checks, logos, Pulse and more; all 27 of its claims checked against the code), is
+[docs/components-map-detailed.png](docs/components-map-detailed.png).
 
 ## Component details
 
