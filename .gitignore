@@ -1,5 +1,7 @@
 node_modules
 .next
-.env
-.env.local
 .vercel
+# Real keys live only in these files and must never be uploaded
+.env*
+# ...except the empty template
+!.env.example
