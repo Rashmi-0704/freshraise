@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useRef, useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
+import gsap from 'gsap';
 import { runNow } from '@/app/actions';
 import { RocketIcon } from './Doodles';
 
@@ -20,14 +21,27 @@ export default function RunButton() {
   const [pending, start] = useTransition();
   const [result, setResult] = useState(null);
   const router = useRouter();
+  const buttonRef = useRef(null);
+
+  // The rocket takes off when the check starts, then comes back in to wait for the result
+  const launch = () => {
+    const rocket = buttonRef.current?.querySelector('.icon-rocket');
+    if (!rocket || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    gsap
+      .timeline()
+      .to(rocket, { y: -28, x: 6, autoAlpha: 0, duration: 0.35, ease: 'power2.in' })
+      .fromTo(rocket, { y: 16, x: 0, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, ease: 'back.out(2)' });
+  };
 
   return (
     <div className="run">
       <button
+        ref={buttonRef}
         className={`btn btn-quiet btn-icon${pending ? ' is-launching' : ''}`}
         disabled={pending}
         onClick={() =>
           start(async () => {
+            launch();
             setResult(null);
             const r = await runNow();
             setResult(summarize(r));

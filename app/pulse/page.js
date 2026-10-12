@@ -65,7 +65,7 @@ export default async function PulsePage() {
           <ul className="tiles" aria-label="Your fits in the last 30 days">
             <li className="tile tile-new">
               <RoundIcon round="seed" />
-              <strong>{data.stats.fits}</strong>
+              <strong data-count={data.stats.fits}>{data.stats.fits}</strong>
               <span>Fits found · 30 days</span>
             </li>
             <li className="tile tile-waiting">
@@ -75,7 +75,7 @@ export default async function PulsePage() {
             </li>
             <li className="tile tile-sent">
               <PlaneIcon />
-              <strong>{data.stats.sent}</strong>
+              <strong data-count={data.stats.sent}>{data.stats.sent}</strong>
               <span>Of them contacted</span>
             </li>
           </ul>

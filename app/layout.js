@@ -1,5 +1,6 @@
 import './globals.css';
 import Nav from '@/components/Nav';
+import Motion from '@/components/Motion';
 
 export const metadata = {
   title: 'FreshRaise',
@@ -21,6 +22,7 @@ export default function RootLayout({ children }) {
       <body>
         <Nav />
         {children}
+        <Motion />
       </body>
     </html>
   );

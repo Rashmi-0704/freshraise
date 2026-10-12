@@ -46,31 +46,42 @@ export function Cloud({ className }) {
 export function Garden({ className }) {
   return (
     <svg className={className} viewBox="0 0 300 100" aria-hidden="true" {...ink}>
+      {/* Each stage is its own group so it can grow in order (see components/Motion.js) */}
       {/* idea: a seed in the soil */}
-      <ellipse cx="30" cy="96" rx="8" ry="5" fill="var(--sun-deep)" />
-      <path d="M30 78 V85 M21 82 L25 86 M39 82 L35 86" strokeWidth="1.4" />
-      <text x="30" y="68">idea</text>
+      <g className="g-stage" data-origin="30 100">
+        <ellipse cx="30" cy="96" rx="8" ry="5" fill="var(--sun-deep)" />
+        <path d="M30 78 V85 M21 82 L25 86 M39 82 L35 86" strokeWidth="1.4" />
+        <text x="30" y="68">idea</text>
+      </g>
 
       {/* pre-seed: first sprout */}
-      <path d="M100 100 V80" />
-      <path d="M100 87 C92 87 86 81 87 74 C94 74 100 79 100 87Z" fill="var(--leaf)" />
-      <path d="M100 83 C106 81 112 75 111 68 C104 68 100 74 100 83Z" fill="var(--leaf)" />
-      <text x="100" y="58" className="focus">pre-seed</text>
+      <g className="g-stage" data-origin="100 100">
+        <path d="M100 100 V80" />
+        <path d="M100 87 C92 87 86 81 87 74 C94 74 100 79 100 87Z" fill="var(--leaf)" />
+        <path d="M100 83 C106 81 112 75 111 68 C104 68 100 74 100 83Z" fill="var(--leaf)" />
+        <text x="100" y="58" className="focus">pre-seed</text>
+      </g>
 
       {/* seed: a small plant */}
-      <path d="M175 100 C173 86 177 72 175 56" />
-      <path d="M175 90 C166 90 160 84 161 77 C168 77 174 82 175 90Z" fill="var(--leaf)" />
-      <path d="M175 78 C183 77 189 71 188 64 C181 64 176 70 175 78Z" fill="var(--leaf)" />
-      <path d="M175 66 C168 65 164 59 165 53 C171 54 175 59 175 66Z" fill="var(--leaf)" />
-      <text x="175" y="42" className="focus">seed</text>
+      <g className="g-stage" data-origin="175 100">
+        <path d="M175 100 C173 86 177 72 175 56" />
+        <path d="M175 90 C166 90 160 84 161 77 C168 77 174 82 175 90Z" fill="var(--leaf)" />
+        <path d="M175 78 C183 77 189 71 188 64 C181 64 176 70 175 78Z" fill="var(--leaf)" />
+        <path d="M175 66 C168 65 164 59 165 53 C171 54 175 59 175 66Z" fill="var(--leaf)" />
+        <text x="175" y="42" className="focus">seed</text>
+      </g>
 
       {/* Series A: the money tree */}
-      <path d="M262 100 V62" strokeWidth="3" />
-      <circle cx="262" cy="46" r="24" fill="var(--leaf)" />
-      <circle cx="252" cy="42" r="4.5" fill="var(--sun)" strokeWidth="1.3" />
-      <circle cx="270" cy="35" r="4.5" fill="var(--sun)" strokeWidth="1.3" />
-      <circle cx="268" cy="55" r="4.5" fill="var(--sun)" strokeWidth="1.3" />
-      <text x="262" y="13">Series A</text>
+      <g className="g-stage" data-origin="262 100">
+        <path d="M262 100 V62" strokeWidth="3" />
+        <circle cx="262" cy="46" r="24" fill="var(--leaf)" />
+        <g className="g-coins">
+          <circle cx="252" cy="42" r="4.5" fill="var(--sun)" strokeWidth="1.3" />
+          <circle cx="270" cy="35" r="4.5" fill="var(--sun)" strokeWidth="1.3" />
+          <circle cx="268" cy="55" r="4.5" fill="var(--sun)" strokeWidth="1.3" />
+        </g>
+        <text x="262" y="13">Series A</text>
+      </g>
     </svg>
   );
 }
@@ -206,8 +217,10 @@ export function ThesisTarget({ className }) {
       <circle cx="60" cy="66" r="48" fill="var(--paper)" />
       <circle cx="60" cy="66" r="32" fill="var(--glow)" />
       <circle cx="60" cy="66" r="15" fill="var(--sun)" />
-      <path d="M60 66 L112 14" strokeWidth="2.2" />
-      <path d="M104 8 L112 14 L118 22 M108 4 L112 14 M114 18 L124 20" />
+      <g className="t-arrow">
+        <path d="M60 66 L112 14" strokeWidth="2.2" />
+        <path d="M104 8 L112 14 L118 22 M108 4 L112 14 M114 18 L124 20" />
+      </g>
       <path d="M60 66 C58 58 60 50 60 44" />
       <path d="M60 52 C53 52 49 47 50 41 C56 41 60 45 60 52Z" fill="var(--leaf)" />
     </svg>

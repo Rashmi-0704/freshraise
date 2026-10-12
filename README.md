@@ -22,6 +22,7 @@ and where each rule is enforced.
 | News | 10 RSS feeds, no keys: 5 Google News searches, Inc42, Entrackr, ET Startups, YourStory, TechCrunch |
 | Exchange rate | Frankfurter (European Central Bank rates, no key) |
 | App | Next.js 14 App Router, plain JavaScript and CSS |
+| Motion | GSAP (free "no charge" licence): sunrise opening, growing funding garden, counting tiles, sliding cards; off for reduced-motion users |
 
 ## How it works
 

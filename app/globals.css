@@ -67,31 +67,27 @@ a { color: inherit; }
   bottom: calc(18px + var(--sun-lift) * 80px); transform: translateX(-50%);
   background: var(--sun);
   box-shadow: 0 0 0 18px rgba(239, 162, 47, .16), 0 0 60px 30px rgba(239, 162, 47, .28);
-  animation: rise 1.4s cubic-bezier(.2,.7,.2,1) both;
 }
-@keyframes rise { from { translate: 0 90px; opacity: .4; } to { translate: 0 0; opacity: 1; } }
 
 /* Startup doodles in the sky */
 .horizon svg { position: absolute; color: var(--ink); overflow: visible; }
 .d-cloud { width: 74px; }
-.d-cloud-1 { left: 17%; top: 22px; animation: drift 14s ease-in-out infinite alternate; }
-.d-cloud-2 { right: 31%; top: 46px; width: 58px; animation: drift 18s ease-in-out infinite alternate-reverse; }
+.d-cloud-1 { left: 17%; top: 22px; }
+.d-cloud-2 { right: 31%; top: 46px; width: 58px; }
 .d-plane { width: 124px; }
-.d-plane-1 { left: 25%; top: 64px; animation: glide 6s ease-in-out infinite; }
-.d-plane-2 { right: 9%; top: 14px; width: 92px; animation: glide 7.5s ease-in-out -2s infinite; }
-.d-rocket { left: 5%; bottom: 4px; width: 50px; rotate: 9deg; animation: hover 3.2s ease-in-out infinite; }
+.d-plane-1 { left: 25%; top: 64px; }
+.d-plane-2 { right: 9%; top: 14px; width: 92px; }
+.d-rocket { left: 5%; bottom: 4px; width: 50px; rotate: 9deg; } /* motion: components/Motion.js (GSAP) */
 .d-rocket .flame { transform-origin: 30px 80px; animation: flicker .35s ease-in-out infinite alternate; }
 .d-garden { right: 3%; bottom: 0; width: 300px; }
 .d-garden text { font-family: var(--hand); font-size: 17px; fill: var(--muted); stroke: none; text-anchor: middle; }
 .d-garden text.focus { fill: var(--sun-deep); font-size: 19px; }
-@keyframes drift { to { translate: 26px 0; } }
-@keyframes glide { 50% { translate: 8px -6px; } }
-@keyframes hover { 50% { translate: 0 -7px; } }
 @keyframes flicker { to { transform: scaleY(1.25); } }
 
 /* Sun-yellow marker under the key words, like a highlighter on a pitch deck */
 .mark {
   background: linear-gradient(transparent 60%, rgba(239, 162, 47, .5) 60%, rgba(239, 162, 47, .5) 92%, transparent 92%);
+  background-repeat: no-repeat; background-size: 100% 100%; /* GSAP sweeps this in */
   padding: 0 .06em; margin: 0 -.06em;
   -webkit-box-decoration-break: clone; box-decoration-break: clone;
 }
@@ -254,9 +250,8 @@ h1 {
 }
 .panel {
   background: var(--paper); border-radius: 16px; box-shadow: 0 0 0 1px var(--line), 0 18px 40px -28px rgba(30, 37, 71, .5);
-  padding: 20px 22px 22px; animation: unfold .2s ease-out;
+  padding: 20px 22px 22px;
 }
-@keyframes unfold { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: none; } }
 .panel-head { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: start; }
 .panel-head h2 { margin: 0; font-size: 1.6rem; letter-spacing: -0.03em; line-height: 1.15; }
 .panel-sub { margin: 4px 0 0; font-weight: 500; }
@@ -319,12 +314,11 @@ h1 {
 .bar { display: grid; grid-template-columns: 82px 1fr auto; align-items: center; gap: 8px; font-size: .85rem; }
 .bar-label { color: var(--muted); font-weight: 500; }
 .bar-track { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
-.bar-fill { display: block; height: 100%; border-radius: inherit; background: var(--c); animation: grow .5s ease-out both; }
+.bar-fill { display: block; height: 100%; border-radius: inherit; background: var(--c); }
 .bar-value { font-weight: 700; font-variant-numeric: tabular-nums; }
 .bar-good { --c: #5aa865; }
 .bar-ok { --c: var(--sun); }
 .bar-low { --c: var(--dusk); }
-@keyframes grow { from { width: 0; } }
 
 /* Company logos (favicon, or an initial when there's none) */
 .card-name, .panel-head h2 { display: flex; align-items: center; gap: 9px; min-width: 0; }

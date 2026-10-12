@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import SunRing from './SunRing';
 import Logo from './Logo';
 import { RoundIcon, PlaneIcon, BuildingIcon, PeopleIcon, QuietMorning } from './Doodles';
@@ -13,6 +15,23 @@ const WIDE = '(min-width: 900px)';
 export default function BriefBoard({ drafts, now, testMode, newHours, archiveDays }) {
   const [selected, setSelected] = useState(null);
   const [done, setDone] = useState({}); // draft id -> { status: 'sent' | 'skipped', to }
+  const boardRef = useRef(null);
+
+  // Each time a startup is picked: the panel slides in, its boxes settle, and the score bars fill in turn
+  useGSAP(
+    () => {
+      const panel = selected && boardRef.current?.querySelector(`#panel-${selected}`);
+      if (!panel) return;
+      const mm = gsap.matchMedia();
+      mm.add('(prefers-reduced-motion: no-preference)', () => {
+        gsap.from(panel, { x: 18, autoAlpha: 0, duration: 0.45, ease: 'power3.out' });
+        gsap.from(panel.querySelectorAll('.dossier-box'), { y: 14, autoAlpha: 0, duration: 0.5, stagger: 0.08, delay: 0.1 });
+        gsap.from(panel.querySelectorAll('.bar-fill'), { width: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out', delay: 0.15 });
+      });
+      return () => mm.revert();
+    },
+    { dependencies: [selected], scope: boardRef, revertOnUpdate: true }
+  );
 
   // On a wide screen, open the first startup so the panel is never empty
   useEffect(() => {
@@ -72,7 +91,7 @@ export default function BriefBoard({ drafts, now, testMode, newHours, archiveDay
   );
 
   return (
-    <div className={`board${selected ? ' has-selection' : ''}`}>
+    <div className={`board${selected ? ' has-selection' : ''}`} ref={boardRef}>
       {/* Rohit's draft folder: nothing leaves it until he approves (Send) or skips */}
       <section className="folder" aria-label="Draft folder">
         <h2 className="folder-title">Draft folder</h2>

@@ -192,17 +192,17 @@ export default async function Home() {
             <ul className="tiles" aria-label="At a glance">
               <li className="tile tile-new">
                 <RoundIcon round="seed" />
-                <strong>{newCount}</strong>
+                <strong data-count={newCount}>{newCount}</strong>
                 <span>New today</span>
               </li>
               <li className="tile tile-waiting">
                 <PenIcon />
-                <strong>{data.drafts.length}</strong>
+                <strong data-count={data.drafts.length}>{data.drafts.length}</strong>
                 <span>Waiting in your folder</span>
               </li>
               <li className="tile tile-sent">
                 <PlaneIcon />
-                <strong>{data.sentWeek}</strong>
+                <strong data-count={data.sentWeek}>{data.sentWeek}</strong>
                 <span>Sent this week</span>
               </li>
             </ul>
