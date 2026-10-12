@@ -113,7 +113,7 @@ BOXES.forEach(([r, c, lines, extra = {}]) => {
 
 // Footer
 const fy = ROW_Y0 + ROW_H * ROWS.length + 42;
-out.push(`<text x="${W / 2}" y="${fy}" text-anchor="middle" font-size="17" fill="#5e6688">Dashed arrows show the flow of data. Every tool runs on a free tier: total cost ₹0. Live at freshraise.vercel.app</text>`);
+out.push(`<text x="${W / 2}" y="${fy}" text-anchor="middle" font-size="17" fill="#5e6688">Final version · 12 Oct 2026 · Dashed arrows show the flow of data · Every tool runs on a free tier: total cost ₹0 · freshraise.vercel.app</text>`);
 out.push(`</svg>`);
 fs.writeFileSync(process.argv[2], out.join('\n'));
 console.log(`wrote ${process.argv[2]} (${W}x${H})`);

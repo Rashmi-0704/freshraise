@@ -8,7 +8,8 @@ email ready for Rohit to approve. Startups that don't fit are never shown. No st
 
 ![FreshRaise components map: actors (Scheduler, News & Rates, System, AI Model, Database, Rohit, Email, Founder) across Trigger, Input, Context, Processing, AI and Output](docs/components-map.svg)
 
-PNG version for slides: [docs/components-map.png](docs/components-map.png)
+PNG version for slides: [docs/components-map.png](docs/components-map.png) · **Final version, 12 Oct 2026.** Every box was
+checked against the code (27 of 27 claims match).
 
 ## Component details
 
