@@ -32,7 +32,9 @@ and where each rule is enforced.
 5. **Score.** Gemini scores each startup 0 to 100 against the `thesis` table, read fresh every run. Below the minimum, it's hidden.
 6. **Research and draft.** Gemini, grounded with Google Search, finds the website, company background and each founder's
    role and background, then writes the email. A website can only ever have one draft.
-7. **Approve.** Rohit opens the Morning Brief, reads the background, edits if needed, and clicks **Send email**. Resend delivers it.
+7. **Morning email.** After the 6 am run, Rohit gets a short email listing the drafts waiting (or a warning if the run failed).
+8. **Approve.** Rohit opens the Morning Brief, reads the background, edits if needed, and clicks **Send email**. Resend delivers it.
+9. **Measure.** When a founder replies, Rohit clicks **Mark replied**. The brief shows sent → replied (%).
 
 All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted at the day's exchange rate.
 
@@ -40,9 +42,11 @@ All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted
 
 - **Morning Brief** (`/`): one card per startup that fits. Closed, a card shows the round, amount in ₹, fit score, a
   one-line description, and a ring counting down the 60-day outreach window. Open it to see the company background,
-  the founders you're writing to, and the editable email. Below the cards, **How this brief was made** shows the
-  six steps of the components map (Trigger, Input, Context, Processing, AI, Output) with numbers from the last run.
+  the founders you're writing to, and the editable email.
+- **Sent so far** (on the Morning Brief): every email sent, a **Mark replied** button, and the reply rate.
 - **Thesis** (`/thesis`): sectors, stages, geography, round size, exclusions, minimum fit score and program pitch.
+  **Re-score with this thesis** applies a changed thesis to the startups already waiting: drafts that no longer fit
+  are hidden (not deleted), and come back if a later thesis fits them again.
 
 ### Changing the thesis without touching code
 
@@ -52,7 +56,7 @@ Use the Thesis page, or edit the row in Neon's SQL editor:
 UPDATE thesis SET min_fit_score = 90, updated_at = now() WHERE id = 1;
 ```
 
-The next run scores against the new thesis. Startups that were already scored keep their old score.
+The next run scores new startups against it. To re-score the ones already waiting, click **Re-score with this thesis** on the Thesis page.
 
 ## Run it locally
 
@@ -97,6 +101,7 @@ remove `RESEND_TEST_TO` to send to founders directly.
 | `MAX_DRAFTS_PER_RUN` | 10 | Drafts written per run (leftovers are drafted next run) |
 | `TIME_BUDGET_MS` | 270000 | How long a run works before stopping, 30s under the 300s limit |
 | `APP_PASSWORD` | empty | If set, the site asks for this password (any username) |
+| `DIGEST_TO` | `RESEND_TEST_TO` | Where the 6 am summary email goes |
 | `USD_INR` | 96 | Backup exchange rate if Frankfurter is unreachable |
 
 ## What changed from the starting code
@@ -106,6 +111,8 @@ remove `RESEND_TEST_TO` to send to founders directly.
 - **Company background:** each draft shows what the company does, when and where it started, and each founder's role
   and background.
 - **Rupees:** every amount is shown in ₹ crore / lakh.
+- **Morning email** to Rohit after the 6 am run, **Mark replied** with a reply rate, and **Re-score with this thesis**.
+- **24-hour window** for announcements, as in the brief.
 - **Gemini model** updated to `gemini-3.8-flash` (2.5 Flash is retired for new keys).
 - **Feeds:** Entrackr's feed moved to `/rss`; added ET Startups.
 - **Reliability safeguards** (below): time limits, rate limits, cron lock, duplicate guards and more.

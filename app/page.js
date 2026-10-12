@@ -1,10 +1,8 @@
 import Horizon from '@/components/Horizon';
 import DraftCard from '@/components/DraftCard';
 import RunButton from '@/components/RunButton';
-import RunMap from '@/components/RunMap';
+import SentList from '@/components/SentList';
 import { QuietMorning } from '@/components/Doodles';
-import { FEEDS } from '@/lib/feeds';
-import { LOOKBACK_HOURS } from '@/lib/pipeline';
 import { sql, ensureSchema } from '@/lib/db';
 import { testRecipient } from '@/lib/resend';
 import { iso } from '@/lib/util';
@@ -36,8 +34,13 @@ async function load() {
     WHERE d.status = 'draft' OR (d.status = 'sending' AND d.sending_at < now() - interval '5 minutes')
     ORDER BY s.announced_at DESC NULLS LAST, s.fit_score DESC`;
   const [run] = await sql`SELECT * FROM runs WHERE finished_at IS NOT NULL ORDER BY id DESC LIMIT 1`;
-  const [thesis] = await sql`SELECT sender_name, min_fit_score FROM thesis WHERE id = 1`;
-  const [{ sent }] = await sql`SELECT count(*)::int AS sent FROM drafts WHERE status = 'sent'`;
+  const [thesis] = await sql`SELECT sender_name FROM thesis WHERE id = 1`;
+  const [{ sent, replied }] = await sql`
+    SELECT count(*)::int AS sent, count(replied_at)::int AS replied FROM drafts WHERE status = 'sent'`;
+  const sentList = await sql`
+    SELECT d.id, s.name, d.sent_at, d.replied_at
+    FROM drafts d JOIN startups s ON s.id = d.startup_id
+    WHERE d.status = 'sent' ORDER BY d.sent_at DESC LIMIT 20`;
   return {
     drafts: drafts.map((d) => {
       const inr = (text) => rupeesInText(text, usdInr); // every amount is shown in rupees, never dollars
@@ -55,9 +58,14 @@ async function load() {
     }),
     run,
     name: thesis?.sender_name || 'Rohit',
-    minScore: thesis?.min_fit_score ?? 65,
-    usdInr,
     sent,
+    replied,
+    sentList: sentList.map((d) => ({
+      id: d.id,
+      name: d.name,
+      replied_at: iso(d.replied_at),
+      sent_label: new Date(d.sent_at).toLocaleString('en-IN', { timeZone: IST, day: 'numeric', month: 'short' }),
+    })),
   };
 }
 
@@ -154,22 +162,7 @@ export default async function Home() {
               </div>
             )}
 
-            <RunMap
-              run={data.run}
-              feedCount={FEEDS.length}
-              lookbackHours={LOOKBACK_HOURS}
-              minScore={data.minScore}
-              usdInr={data.usdInr}
-              waiting={data.drafts.length}
-              sent={data.sent}
-            />
-
-            {data.sent > 0 && (
-              <p className="footnote">
-                {data.sent} {data.sent === 1 ? 'founder has' : 'founders have'} been contacted so far. FreshRaise never drafts
-                for the same startup twice.
-              </p>
-            )}
+            <SentList items={data.sentList} sentTotal={data.sent} repliedTotal={data.replied} />
           </>
         )}
       </div>

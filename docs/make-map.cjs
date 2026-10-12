@@ -31,12 +31,12 @@ const BOXES = [
   [2, 2, ['10 live RSS feeds:', 'Google News, Inc42,', 'Entrackr, ET Startups,', 'YourStory, TechCrunch']],
   [2, 3, ['Frankfurter: today’s', 'USD → INR rate, so', 'every amount is in ₹']],
   [5, 3, ['Thesis row, plus', 'memory of every seen', 'URL and past startup']],
-  [6, 3, ['Sets the thesis:', 'sectors, ₹ round size,', 'exclusions, min score']],
+  [6, 3, ['Sets the thesis', '(₹ round size, min score)', 'and re-scores the', 'startups waiting']],
   [3, 4, ['Keeps last 24h,', 'funding news, unseen', 'URLs; blocks repeat', 'names + websites']],
   [4, 5, ['Screens seed rounds,', 'scores fit vs thesis,', 'researches founders,', 'drafts the email']],
   [3, 6, ['Morning Brief: ₹ amount,', 'fit score, background,', 'founders + draft']],
-  [6, 6, ['Reviews, edits and', 'clicks Send or Skip.', 'Nothing sends', 'without him'], { bold: true }],
-  [7, 6, ['Sends the approved', 'email; startup marked', 'sent, never drafted again']],
+  [6, 6, ['Reviews, edits, Send', 'or Skip; marks replies.', 'Nothing sends', 'without him'], { bold: true }],
+  [7, 6, ['6 am summary to Rohit;', 'sends each approved', 'email; startup never', 'drafted again']],
   [8, 6, ['Gets a personal', 'email right after', 'the raise']],
 ];
 

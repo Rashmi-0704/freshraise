@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { sql, ensureSchema } from '@/lib/db';
-import { runPipeline } from '@/lib/pipeline';
+import { runPipeline, rescoreWaiting } from '@/lib/pipeline';
 import { sendEmail, testRecipient } from '@/lib/resend';
 
 export async function runNow() {
@@ -48,6 +48,30 @@ export async function skipDraft(id) {
   const rows = await sql`UPDATE drafts SET status = 'skipped' WHERE id = ${id} AND status = 'draft' RETURNING startup_id`;
   if (rows.length) await sql`UPDATE startups SET status = 'skipped' WHERE id = ${rows[0].startup_id}`;
   return { ok: true };
+}
+
+// Rohit records that a founder replied (or undoes it), so the reply rate can be measured
+export async function markReplied(id, replied) {
+  const rows = await sql`
+    UPDATE drafts SET replied_at = ${replied ? new Date().toISOString() : null}
+    WHERE id = ${id} AND status = 'sent'
+    RETURNING id`;
+  revalidatePath('/');
+  return { ok: rows.length > 0 };
+}
+
+// Score every undecided startup again against the thesis as it is now
+export async function rescoreNow() {
+  let q;
+  try {
+    const r = await rescoreWaiting();
+    q = `rescored=${r.scored}&fit=${r.fit}&rejected=${r.rejected}&need=${r.needDraft}`;
+  } catch (err) {
+    q = `rescore_error=${encodeURIComponent(err.message.slice(0, 200))}`;
+  }
+  revalidatePath('/');
+  revalidatePath('/thesis');
+  redirect(`/thesis?${q}`);
 }
 
 export async function saveThesis(formData) {

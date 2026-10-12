@@ -25,8 +25,11 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 | AI | Research + draft | **Gemini Flash + Google Search** | Finds website, company background, founders with roles and backgrounds, then writes a short email | ✅ |
 | Context | Rupees | **Frankfurter** (free, no key, ECB rates; `lib/money.js`) | Converts dollar amounts to ₹ crore / lakh at today's rate | ✅ |
 | Storage | Everything | **Neon Postgres** (replaces Supabase, approved) | `thesis`, `articles`, `startups`, `drafts`, `runs` tables, created automatically | ✅ |
-| Output | Morning Brief | Next.js 14 on **Vercel** (Singapore region) | Draft cards: round, ₹ amount, fit score, 60-day ring, company background, founders, editable email; plus a "How this brief was made" strip showing these same six steps with the last run's numbers | ✅ |
+| Output | Morning Brief | Next.js 14 on **Vercel** (Singapore region) | Draft cards: round, ₹ amount, fit score, 60-day ring, company background, founders, editable email | ✅ |
 | Output | Send | **Resend** (`lib/resend.js`) | Sends the approved email; test mode sends to our own inbox | ✅ Test email received |
+| Output | Morning email | **Resend** (`lib/digest.js`) | After the 6 am run, emails Rohit the drafts waiting (₹ amount, fit) and a link, or a problem report if the run failed; nothing on a quiet morning | ✅ Test email sent |
+| Output | Replies | Morning Brief, "Sent so far" | Rohit marks which founders replied; shows sent → replied (%) | ✅ |
+| Context | Re-score | Thesis page button (`rescoreWaiting` in `lib/pipeline.js`) | Scores waiting startups against the current thesis; drafts that no longer fit are hidden, not deleted | ✅ Tested (97 hid 2, back to 65 restored them) |
 | Code | Repo | **GitHub** (public) | Push to `main` → Vercel deploys | ✅ |
 
 ```
@@ -38,7 +41,7 @@ Vercel Cron (6 am IST) ─┐
           Gemini: score vs thesis (Neon) ─┬─ below minimum → hidden, logged as rejected
                                           └─ fit → Gemini + Google Search: research + draft
                                                          ↓
-                                Morning Brief (Vercel) → Rohit edits → Resend → founder
+                                Morning Brief (Vercel) + 6 am email → Rohit edits → Resend → founder → Rohit marks reply
 ```
 
 **Cost:** ₹0. Every tool runs on a free tier with no credit card: Gemini (AI Studio), Neon, Resend, Vercel Hobby,
@@ -59,7 +62,7 @@ GitHub, RSS feeds and Frankfurter.
 | # | Check | Answer | Evidence |
 |---|---|---|---|
 | 04 | Output valuable? | ✅ Yes | Rohit gets a ready-to-send email plus the company background, the founders' roles and past companies, and a fit score with a reason. He only reviews, edits and clicks Send. |
-| 05 | Impact measurable? | ✅ Yes | Every run is logged in the `runs` table (articles read, rounds found, set aside, duplicates, drafted). The `drafts` table records sent vs skipped, so the share of drafts Rohit actually sends can be tracked. Not yet tracked: founder replies (Resend doesn't see replies). |
+| 05 | Impact measurable? | ✅ Yes | Every run is logged in the `runs` table (articles read, rounds found, set aside, duplicates, drafted). The `drafts` table records sent vs skipped, and Rohit marks replies on the Morning Brief, which shows **sent → replied (%)**: the real measure of whether the outreach works. |
 | 08 | ROI worth it? | ✅ Yes | Running cost is ₹0 (all free tiers). It replaces the daily news reading and the per-startup research. The time saved is an estimate to confirm with Rohit, and it scales with how many rounds are announced. |
 
 ### 🚧 Boundary (any No means: put a human exactly here)
@@ -68,7 +71,7 @@ GitHub, RSS feeds and Frankfurter.
 |---|---|---|---|
 | 06 | Failure risk OK? | ✅ Yes, with a human at Send | The worst case is a wrong or awkward cold email, so **nothing is sent without Rohit clicking Send**. Test mode routes every email to our own inbox. A startup the AI wrongly rejects is only a missed lead, and Rohit can lower `min_fit_score` to see more. |
 | 07 | Judgment protected? | ✅ Yes | AI only finds, scores and drafts. **Rohit decides** who fits (he owns the thesis), whether to contact them, and what the email says (he can edit or skip). The AI never sends on its own. |
-| 09 | Owner clear? | ✅ Yes | **Rohit** owns the thesis and every send. **The builder (Rashmi)** owns the system: API keys, feeds and the daily cron. If a run fails, the Morning Brief shows "Last check hit a problem" with the reason, and the `runs` table keeps the history. |
+| 09 | Owner clear? | ✅ Yes | **Rohit** owns the thesis and every send. **The builder (Rashmi)** owns the system: API keys, feeds and the daily cron. If the 6 am run fails, Rohit gets an email saying so, the Morning Brief shows "Last check hit a problem" with the reason, and the `runs` table keeps the history. |
 
 Technical safeguards that keep the daily run reliable (time limits, rate limits, duplicate guards) are listed in the
 README under **Reliability safeguards**.
@@ -84,10 +87,12 @@ README under **Reliability safeguards**.
 | Emails via Resend | `lib/resend.js` |
 | Free tiers only | See Cost above |
 | Never draft the same startup twice | `startups.name_key` UNIQUE, `drafts.startup_id` UNIQUE, `drafts.domain` unique index |
-| Non-fitting startups never shown | Only `drafts` with status `draft` are listed; rejected startups never get a draft |
+| Non-fitting startups never shown | Only `drafts` with status `draft` are listed; rejected startups never get a draft, and a re-score hides drafts that stop fitting (`set_aside`) |
 | Thesis editable without code | `thesis` table (Thesis page or Neon SQL editor), read on every run |
 | No keys in code | Everything comes from environment variables; `.env*` is gitignored |
 
 ## Startup status lifecycle
 
-`new` → scored → `rejected` (hidden) **or** `fit` → `drafted` (or `duplicate` if the website already has a draft) → `sent` / `skipped`
+`new` → scored → `rejected` (hidden) **or** `fit` → `drafted` (or `duplicate` if the website already has a draft) → `sent` (then optionally marked replied) / `skipped`
+
+A re-score can move a waiting startup between `fit`/`drafted` and `rejected`; its draft is hidden (`set_aside`) or restored to match. Sent and skipped startups are never re-scored.

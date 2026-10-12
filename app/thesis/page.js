@@ -1,8 +1,10 @@
 import { ensureSchema, getThesis } from '@/lib/db';
-import { saveThesis } from '@/app/actions';
+import { saveThesis, rescoreNow } from '@/app/actions';
+import RescoreButton from '@/components/RescoreButton';
 import { ThesisTarget, PenIcon, TargetIcon, GiftIcon } from '@/components/Doodles';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 120; // the re-score button calls Gemini from this page
 
 function Area({ name, label, hint, value, rows = 2 }) {
   return (
@@ -40,7 +42,21 @@ export default async function ThesisPage({ searchParams }) {
       </div>
 
       {searchParams?.saved && (
-        <p className="notice notice-ok" role="status">Thesis saved. The next check will score against it.</p>
+        <p className="notice notice-ok" role="status">
+          Thesis saved. New startups are scored against it from the next check. To apply it to the ones already
+          waiting, use <strong>Re-score with this thesis</strong> below.
+        </p>
+      )}
+      {searchParams?.rescored != null && (
+        <p className="notice notice-ok" role="status">
+          Re-scored {searchParams.rescored} {searchParams.rescored === '1' ? 'startup' : 'startups'}: {searchParams.fit}{' '}
+          now fit and {searchParams.rejected} are set aside (hidden from your brief).
+          {Number(searchParams.need) > 0 &&
+            ` ${searchParams.need} newly fitting ${searchParams.need === '1' ? 'startup needs' : 'startups need'} a draft; click “Check for new rounds” on the Morning Brief to write ${searchParams.need === '1' ? 'it' : 'them'}.`}
+        </p>
+      )}
+      {searchParams?.rescore_error && (
+        <p className="notice notice-error" role="alert">Re-scoring stopped: {searchParams.rescore_error}</p>
       )}
       {error && <p className="notice notice-error">{error}</p>}
 
@@ -95,6 +111,19 @@ export default async function ThesisPage({ searchParams }) {
               Last updated {new Date(t.updated_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' })}
             </span>
           </div>
+        </form>
+      )}
+
+      {t && (
+        <form action={rescoreNow} className="rescore">
+          <div>
+            <h2>Changed the thesis?</h2>
+            <p className="thint">
+              Scores every startup still waiting (and the ones set aside) against the thesis as it is now. Sent and
+              skipped startups are never touched, and no startup is ever drafted twice.
+            </p>
+          </div>
+          <RescoreButton />
         </form>
       )}
     </main>
