@@ -1,7 +1,10 @@
 import Horizon from '@/components/Horizon';
 import DraftCard from '@/components/DraftCard';
 import RunButton from '@/components/RunButton';
+import RunMap from '@/components/RunMap';
 import { QuietMorning } from '@/components/Doodles';
+import { FEEDS } from '@/lib/feeds';
+import { LOOKBACK_HOURS } from '@/lib/pipeline';
 import { sql, ensureSchema } from '@/lib/db';
 import { testRecipient } from '@/lib/resend';
 import { iso } from '@/lib/util';
@@ -33,7 +36,7 @@ async function load() {
     WHERE d.status = 'draft' OR (d.status = 'sending' AND d.sending_at < now() - interval '5 minutes')
     ORDER BY s.announced_at DESC NULLS LAST, s.fit_score DESC`;
   const [run] = await sql`SELECT * FROM runs WHERE finished_at IS NOT NULL ORDER BY id DESC LIMIT 1`;
-  const [thesis] = await sql`SELECT sender_name FROM thesis WHERE id = 1`;
+  const [thesis] = await sql`SELECT sender_name, min_fit_score FROM thesis WHERE id = 1`;
   const [{ sent }] = await sql`SELECT count(*)::int AS sent FROM drafts WHERE status = 'sent'`;
   return {
     drafts: drafts.map((d) => {
@@ -52,6 +55,8 @@ async function load() {
     }),
     run,
     name: thesis?.sender_name || 'Rohit',
+    minScore: thesis?.min_fit_score ?? 65,
+    usdInr,
     sent,
   };
 }
@@ -148,6 +153,16 @@ export default async function Home() {
                 <p className="hand">Quiet morning. No fresh rounds yet, so enjoy the chai.</p>
               </div>
             )}
+
+            <RunMap
+              run={data.run}
+              feedCount={FEEDS.length}
+              lookbackHours={LOOKBACK_HOURS}
+              minScore={data.minScore}
+              usdInr={data.usdInr}
+              waiting={data.drafts.length}
+              sent={data.sent}
+            />
 
             {data.sent > 0 && (
               <p className="footnote">

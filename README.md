@@ -26,7 +26,7 @@ and where each rule is enforced.
 ## How it works
 
 1. **Listen.** At 6:00 am IST (or when Rohit clicks **Check for new rounds**), pulls 10 live RSS feeds in parallel.
-2. **Filter.** Keeps articles from the last 26 hours that look like funding news and haven't been seen before.
+2. **Filter.** Keeps articles from the last 24 hours that look like funding news and haven't been seen before.
 3. **Screen.** Gemini picks out real pre-seed / seed / angel rounds by Indian or Indian-founded startups.
 4. **Dedupe.** Each startup gets a normalised name key that is unique in the database. Already seen means skipped.
 5. **Score.** Gemini scores each startup 0 to 100 against the `thesis` table, read fresh every run. Below the minimum, it's hidden.
@@ -40,7 +40,8 @@ All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted
 
 - **Morning Brief** (`/`): one card per startup that fits. Closed, a card shows the round, amount in ₹, fit score, a
   one-line description, and a ring counting down the 60-day outreach window. Open it to see the company background,
-  the founders you're writing to, and the editable email.
+  the founders you're writing to, and the editable email. Below the cards, **How this brief was made** shows the
+  six steps of the components map (Trigger, Input, Context, Processing, AI, Output) with numbers from the last run.
 - **Thesis** (`/thesis`): sectors, stages, geography, round size, exclusions, minimum fit score and program pitch.
 
 ### Changing the thesis without touching code
@@ -74,7 +75,7 @@ Tables are created automatically on first load.
 1. Push to GitHub, then in Vercel: **Add New → Project →** import the repo.
 2. **Settings → Environment Variables:** add everything from `.env.example`.
 3. Deploy. The daily cron from `vercel.json` appears under **Settings → Cron Jobs**. On the Hobby plan Vercel may run
-   it any time within that hour, which the 26-hour lookback covers.
+   it any time within that hour.
 
 Functions run in `sin1` (Singapore) next to the Neon database, with a 300-second limit (Fluid Compute, on by default).
 
@@ -91,7 +92,7 @@ remove `RESEND_TEST_TO` to send to founders directly.
 | `GEMINI_MODEL` | gemini-3.8-flash | Any Gemini Flash model your key can use |
 | `GEMINI_SEARCH` | true | Research with Google Search before drafting |
 | `GEMINI_RPM` | 10 | Max Gemini requests per minute (match your free-tier limit) |
-| `LOOKBACK_HOURS` | 26 | How far back to look. Try 168 (7 days) on a quiet news week |
+| `LOOKBACK_HOURS` | 24 | How far back to look. Try 168 (7 days) on a quiet news week |
 | `MAX_ARTICLES_PER_RUN` | 100 | Articles sent to Gemini for screening per run |
 | `MAX_DRAFTS_PER_RUN` | 10 | Drafts written per run (leftovers are drafted next run) |
 | `TIME_BUDGET_MS` | 270000 | How long a run works before stopping, 30s under the 300s limit |
@@ -122,7 +123,7 @@ Found while reviewing the starting code and fixed before deploying, so a run nev
 | The Gemini model is retired | Uses `gemini-3.8-flash`; drops the "thinking" setting if a model rejects it | `lib/gemini.js` |
 | Strangers trigger the cron | `/api/cron` refuses to run without `CRON_SECRET` | `app/api/cron/route.js` |
 | Anyone can use the public site | Optional password with `APP_PASSWORD` | `middleware.js` |
-| News slips between daily runs | 26-hour lookback; seen URLs are skipped, so overlap is safe | `lib/pipeline.js` |
+| A quiet news day | Raise `LOOKBACK_HOURS` (e.g. 48); seen URLs are skipped, so overlap is always safe | `lib/pipeline.js` |
 | Double or stuck sends | Lock before sending (released after 5 minutes if a send crashed); Resend idempotency key | `app/actions.js`, `lib/resend.js` |
 | Same startup under two names | Normalised name key, plus one draft per website domain | `lib/util.js`, `lib/db.js` |
 | Killed or overlapping runs | Stale runs closed after 10 minutes; only one run at a time | `lib/pipeline.js` |

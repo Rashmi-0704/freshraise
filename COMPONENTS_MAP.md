@@ -17,7 +17,7 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 | Trigger | Daily run | **Vercel Cron** (`vercel.json`, `app/api/cron/route.js`) | Runs the pipeline at 00:30 UTC (6:00 am IST), protected by `CRON_SECRET` | ✅ Registered |
 | Trigger (manual) | "Check for new rounds" button | Next.js server action (`app/actions.js`) | Same pipeline, on demand | ✅ Live |
 | Input | Live news | 10 free RSS feeds (`lib/feeds.js`): 5 Google News searches, Inc42, Entrackr, ET Startups, YourStory, TechCrunch | Pulls about 190 articles in parallel, no API keys | ✅ All 10 working |
-| Processing | Filter | `lib/pipeline.js` | Keeps the last 26 hours, funding-looking titles, no Series B+, never-seen URLs; up to 100 articles | ✅ |
+| Processing | Filter | `lib/pipeline.js` | Keeps the last 24 hours, funding-looking titles, no Series B+, never-seen URLs; up to 100 articles | ✅ |
 | AI | Screen | **Gemini Flash** (`gemini-3.8-flash`, `lib/gemini.js`) | Picks real pre-seed / seed / angel rounds with an Indian link, in one request | ✅ |
 | Dedupe | Never twice | **Neon Postgres** | Startup name key is UNIQUE; a website can only ever have one draft | ✅ Tested (5 of 5 repeats blocked) |
 | Context | Thesis | `thesis` table in Neon | Sectors, stages, geography, round size (₹), exclusions, minimum score; read fresh every run | ✅ Tested (65 → 90 changed results, no code edit) |
@@ -25,7 +25,7 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 | AI | Research + draft | **Gemini Flash + Google Search** | Finds website, company background, founders with roles and backgrounds, then writes a short email | ✅ |
 | Context | Rupees | **Frankfurter** (free, no key, ECB rates; `lib/money.js`) | Converts dollar amounts to ₹ crore / lakh at today's rate | ✅ |
 | Storage | Everything | **Neon Postgres** (replaces Supabase, approved) | `thesis`, `articles`, `startups`, `drafts`, `runs` tables, created automatically | ✅ |
-| Output | Morning Brief | Next.js 14 on **Vercel** (Singapore region) | Draft cards: round, ₹ amount, fit score, 60-day ring, company background, founders, editable email | ✅ |
+| Output | Morning Brief | Next.js 14 on **Vercel** (Singapore region) | Draft cards: round, ₹ amount, fit score, 60-day ring, company background, founders, editable email; plus a "How this brief was made" strip showing these same six steps with the last run's numbers | ✅ |
 | Output | Send | **Resend** (`lib/resend.js`) | Sends the approved email; test mode sends to our own inbox | ✅ Test email received |
 | Code | Repo | **GitHub** (public) | Push to `main` → Vercel deploys | ✅ |
 

@@ -32,7 +32,7 @@ const BOXES = [
   [2, 3, ['Frankfurter: today’s', 'USD → INR rate, so', 'every amount is in ₹']],
   [5, 3, ['Thesis row, plus', 'memory of every seen', 'URL and past startup']],
   [6, 3, ['Sets the thesis:', 'sectors, ₹ round size,', 'exclusions, min score']],
-  [3, 4, ['Keeps last 26h,', 'funding news, unseen', 'URLs; blocks repeat', 'names + websites']],
+  [3, 4, ['Keeps last 24h,', 'funding news, unseen', 'URLs; blocks repeat', 'names + websites']],
   [4, 5, ['Screens seed rounds,', 'scores fit vs thesis,', 'researches founders,', 'drafts the email']],
   [3, 6, ['Morning Brief: ₹ amount,', 'fit score, background,', 'founders + draft']],
   [6, 6, ['Reviews, edits and', 'clicks Send or Skip.', 'Nothing sends', 'without him'], { bold: true }],
