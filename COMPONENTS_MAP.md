@@ -46,7 +46,8 @@ Vercel Cron (6 am IST) ─┐
                                 Morning Brief (Vercel) + 6 am email → Rohit edits → Resend → founder → Rohit marks reply
 ```
 
-**Cost:** ₹0. Every tool runs on a free tier with no credit card: Gemini (AI Studio), Neon, Resend, Vercel Hobby,
+**Cost:** Gemini runs through **OpenRouter**, which is pay-as-you-go: a few cents on a quiet day, more on days with
+many researched drafts (usage at openrouter.ai/activity). Everything else is a free tier with no credit card: Neon, Resend, Vercel Hobby,
 GitHub, RSS feeds and Frankfurter.
 
 ## Why the draft folder is in the app, not in Gmail
@@ -82,7 +83,7 @@ new today.
 |---|---|---|---|
 | 04 | Output valuable? | ✅ Yes | Rohit gets a ready-to-send email plus the company background, the founders' roles and past companies, and a fit score with a reason. He only reviews, edits and clicks Send. |
 | 05 | Impact measurable? | ✅ Yes | Every run is logged in the `runs` table (articles read, rounds found, set aside, duplicates, drafted). The `drafts` table records sent vs skipped, and Rohit marks replies on the Morning Brief, which shows **sent → replied (%)**: the real measure of whether the outreach works. |
-| 08 | ROI worth it? | ✅ Yes | Running cost is ₹0 (all free tiers). It replaces the daily news reading and the per-startup research. The time saved is an estimate to confirm with Rohit, and it scales with how many rounds are announced. |
+| 08 | ROI worth it? | ✅ Yes | Hosting, database and email are free tiers; Gemini through OpenRouter costs a few cents a day. It replaces the daily news reading and the per-startup research. The time saved is an estimate to confirm with Rohit, and it scales with how many rounds are announced. |
 
 ### 🚧 Boundary (any No means: put a human exactly here)
 
@@ -99,12 +100,12 @@ README under **Reliability safeguards**.
 
 | Rule | Where |
 |---|---|
-| Gemini Flash for every AI task, via Google AI Studio | `lib/gemini.js` is the only AI client; no other AI SDK in `package.json` |
+| Gemini Flash for every AI task | `lib/gemini.js` is the only AI client. It calls `google/gemini-3.8-flash` through OpenRouter with `provider.only = ["google-vertex", "google-ai-studio"]` and no fallbacks, so every request is served by Google. No other AI vendor or SDK |
 | Live external data | 10 live RSS feeds (`lib/feeds.js`) and the live exchange rate (`lib/money.js`) |
 | Deployed on Vercel with a public URL | https://freshraise.vercel.app |
 | Neon Postgres database | `lib/db.js` (`@neondatabase/serverless`) |
 | Emails via Resend | `lib/resend.js` |
-| Free tiers only | See Cost above |
+| Free tiers | Everything except Gemini, which runs pay-as-you-go through OpenRouter (see Cost above) |
 | Never draft the same startup twice | `startups.name_key` UNIQUE, `drafts.startup_id` UNIQUE, `drafts.domain` unique index |
 | Non-fitting startups never shown | A startup needs the minimum score **and** no 0/5 check (`scoreStartups` in `lib/pipeline.js`); only `drafts` with status `draft` are listed; rejected startups never get a draft, and a re-score hides drafts that stop fitting (`set_aside`) |
 | Thesis editable without code | `thesis` table (Thesis page or Neon SQL editor), read on every run |

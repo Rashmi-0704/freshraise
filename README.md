@@ -11,11 +11,11 @@ Startups that don't fit are never shown. No startup is ever drafted twice.
 See [COMPONENTS_MAP.md](./COMPONENTS_MAP.md) for the component map, the Nine Checks (does this deserve to be built?)
 and where each rule is enforced.
 
-## Stack (all free tiers, ₹0)
+## Stack
 
 | Part | Tool |
 |---|---|
-| AI | Gemini Flash (`gemini-3.8-flash`) via Google AI Studio, REST API |
+| AI | Gemini Flash (`google/gemini-3.8-flash`) through **OpenRouter**, restricted to Google-served providers (Vertex AI / AI Studio, no fallbacks). Research uses Gemini's native Google Search grounding. Pay-as-you-go |
 | Database | Neon Postgres (used in place of Supabase, approved by instructor) |
 | Email | Resend |
 | Hosting + daily schedule | Vercel Hobby (Singapore region) + Vercel Cron |
@@ -76,7 +76,7 @@ The next run scores new startups against it. To re-score the ones already waitin
 
 ```bash
 npm install
-cp .env.example .env.local   # fill in DATABASE_URL, GEMINI_API_KEY, RESEND_API_KEY, RESEND_TEST_TO, CRON_SECRET
+cp .env.example .env.local   # fill in DATABASE_URL, OPENROUTER_API_KEY, RESEND_API_KEY, RESEND_TEST_TO, CRON_SECRET
 npm run dev                  # open http://localhost:3000
 ```
 
@@ -84,7 +84,7 @@ Tables are created automatically on first load.
 
 **Where the keys come from**
 - `DATABASE_URL`: neon.tech → project → **Connect** → connection string
-- `GEMINI_API_KEY`: aistudio.google.com → **Get API key**
+- `OPENROUTER_API_KEY`: openrouter.ai → **Keys** (a `GEMINI_API_KEY` from aistudio.google.com still works as a fallback)
 - `RESEND_API_KEY`: resend.com → **API Keys**
 - `CRON_SECRET`: any long random string
 
