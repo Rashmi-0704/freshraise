@@ -28,7 +28,8 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 | Output | Draft folder (Morning Brief) | Next.js 14 on **Vercel** (Singapore region) | Rohit's draft folder, split into **New today** (announced in the last 24 hours) and **Still pending**; each draft shows round, ₹ amount, fit score, a ring counting down the days left, company background, founders and the editable email. Drafts are archived 7 days after the announcement (article publish date) | ✅ |
 | Output | Send | **Resend** (`lib/resend.js`) | Sends the approved email; test mode sends to our own inbox | ✅ Test email received |
 | Output | Morning email | **Resend** (`lib/digest.js`) | After the 6 am run, emails Rohit the drafts waiting (₹ amount, fit) and a link, or a problem report if the run failed; nothing on a quiet morning | ✅ Test email sent |
-| Output | Replies | Morning Brief, "Sent so far" | Rohit marks which founders replied; shows sent → replied (%) | ✅ |
+| Output | Sent emails | Morning Brief, "Sent so far" | **View email** opens each sent email exactly as sent; Rohit marks which founders replied; shows sent → replied (%) | ✅ |
+| Output | Pulse page | `/pulse` (`lib/pulse.js`) + **Gemini Flash** | Gemini's 4-point daily summary of startup news (one request a day, saved in the `pulse` table), the latest headlines, funding numbers for your fits, **rounds you missed** (fits archived without an email) and **your startups in the news**. Startups that didn't fit never appear, not even in totals; headlines about them are filtered out | ✅ |
 | Context | Re-score | Thesis page button (`rescoreWaiting` in `lib/pipeline.js`) | Scores waiting startups against the current thesis; drafts that no longer fit are hidden, not deleted | ✅ Tested (97 hid 2, back to 65 restored them) |
 | Code | Repo | **GitHub** (public) | Push to `main` → Vercel deploys | ✅ |
 

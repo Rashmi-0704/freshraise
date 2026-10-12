@@ -51,7 +51,12 @@ All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted
   Each card and the panel header show the company's logo (Google's free favicon service; an initial if there's
   none). In the panel, four bars show the score breakdown (sector, stage, geography, round size, each 0-5), and each
   founder has a **Find on LinkedIn** link.
-- **Sent so far** (on the Morning Brief): every email sent, a **Mark replied** button, and the reply rate.
+- **Sent so far** (on the Morning Brief): every email sent, a **View email** button to read it again exactly as sent,
+  a **Mark replied** button, and the reply rate.
+- **Pulse** (`/pulse`): what's happening in the startup world. A 4-point summary Gemini writes once a day from the
+  feeds' headlines, the latest startup news, funding numbers for your fits (last 30 days), **rounds you missed**
+  (good fits that left the folder without an email) and **your startups in the news**. Startups that didn't fit the
+  thesis never appear here, not even in totals.
 - **Thesis** (`/thesis`): sectors, stages, geography, round size, exclusions, minimum fit score and program pitch.
   **Re-score with this thesis** applies a changed thesis to the startups already waiting: drafts that no longer fit
   are hidden (not deleted), and come back if a later thesis fits them again.

@@ -22,6 +22,7 @@ export default function Nav() {
       </Link>
       <nav>
         <Link href="/" aria-current={path === '/' ? 'page' : undefined}>Morning brief</Link>
+        <Link href="/pulse" aria-current={path === '/pulse' ? 'page' : undefined}>Pulse</Link>
         <Link href="/thesis" aria-current={path === '/thesis' ? 'page' : undefined}>Thesis</Link>
       </nav>
     </header>

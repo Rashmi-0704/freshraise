@@ -345,6 +345,45 @@ h1 {
 }
 .people .linkedin:hover { text-decoration: underline; text-underline-offset: 3px; }
 
+/* ---------- Pulse page ---------- */
+.pulse { padding-top: 34px; }
+.pulse h1 { max-width: none; }
+.pulse-today {
+  margin: 24px 0 18px; padding: 18px 22px; border-radius: 18px; position: relative; overflow: hidden;
+  background: linear-gradient(135deg, var(--sky-high), var(--sky-low) 60%, var(--glow));
+  box-shadow: 0 0 0 1.5px var(--ink);
+}
+.pulse-today h2 { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 0 0 10px; font-size: 1.2rem; }
+.pulse-today h2 span { font-family: var(--hand); font-weight: 600; font-size: 1.3rem; color: var(--sun-deep); }
+.pulse-today ul { margin: 0; padding-left: 20px; display: grid; gap: 7px; max-width: 90ch; }
+.pulse-today li { font-size: 1rem; line-height: 1.45; }
+.pulse-today li::marker { color: var(--sun-deep); }
+.pulse-credit { margin: 10px 0 0; font-size: .8rem; color: var(--muted); }
+.pulse-sectors { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin: -8px 0 22px; color: var(--muted); font-size: .9rem; }
+.pulse-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.pulse-side { display: grid; gap: 18px; }
+.pulse-card { background: var(--paper); border-radius: 16px; box-shadow: 0 0 0 1px var(--line); padding: 16px 18px 18px; }
+.pulse-card h2 { margin: 0 0 4px; font-size: 1.1rem; }
+.pulse-card .thint { margin: 0 0 10px; }
+.news { list-style: none; margin: 8px 0 0; padding: 0; display: grid; }
+.news li { display: grid; gap: 2px; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+.news li:last-child { border-bottom: 0; }
+.news a { color: var(--ink); text-decoration: none; font-weight: 600; line-height: 1.35; }
+.news a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.news span { font-size: .8rem; color: var(--muted); }
+.mini-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.mini-list li { display: grid; grid-template-columns: 28px 1fr auto; gap: 10px; align-items: start; font-size: .9rem; }
+.mini-list li > span { display: grid; gap: 3px; min-width: 0; }
+.mini-list small { color: var(--muted); font-size: .8rem; }
+.mini-list a { color: var(--sun-deep); font-weight: 600; font-size: .85rem; text-underline-offset: 3px; }
+.mini-list .tracked a { color: var(--ink); font-weight: 500; text-decoration: none; }
+.mini-list .tracked a:hover { text-decoration: underline; }
+.tag { font-style: normal; font-size: .72rem; font-weight: 700; padding: 1px 7px; border-radius: 99px; margin-left: 4px; vertical-align: 1px; }
+.tag-sent { background: #e3e5fb; color: #3b3fa8; }
+.tag-draft { background: var(--glow); color: #7a4a06; }
+.tag-archived { background: #fbe3ec; color: #8a2950; }
+.pulse-empty { margin: 0; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--line); color: var(--muted); font-size: .9rem; }
+
 /* Sent emails and replies */
 .sent { margin-top: 34px; }
 .sent h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 4px; font-size: 1.1rem; }
@@ -360,6 +399,25 @@ h1 {
 .sent-name { font-weight: 700; min-width: 0; overflow-wrap: anywhere; }
 .sent-when { color: var(--muted); font-size: .88rem; white-space: nowrap; }
 .btn-small { padding: 6px 12px; font-size: .88rem; border-radius: 8px; }
+.sent-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+/* A sent email, read again in a pop-up */
+.modal {
+  position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px;
+  background: rgba(30, 37, 71, .45); animation: fade .15s ease-out;
+}
+@keyframes fade { from { opacity: 0; } }
+.modal-card {
+  width: min(680px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; background: var(--paper);
+  border-radius: 18px; padding: 20px 22px 22px; box-shadow: 0 30px 60px -20px rgba(30, 37, 71, .5);
+}
+.modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.modal-head h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 1.25rem; }
+.modal-head h2 .icon { color: var(--sun-deep); }
+.mail-meta { display: grid; grid-template-columns: 70px 1fr; gap: 6px 12px; margin: 16px 0 0; font-size: .92rem; }
+.mail-meta dt { color: var(--muted); }
+.mail-meta dd { margin: 0; overflow-wrap: anywhere; }
+.mail-body { white-space: pre-wrap; margin-top: 14px; }
 .btn-replied { background: #e9f4ea; color: #2f5d36; box-shadow: inset 0 0 0 1px #c3e0c6; }
 
 /* Re-score after a thesis change */
@@ -409,6 +467,7 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
 /* ---------- Narrower screens: the details panel slides in over the list ---------- */
 @media (max-width: 899px) {
   .board { grid-template-columns: 1fr; }
+  .pulse-grid { grid-template-columns: 1fr; }
   .card-summary.is-active::after { display: none; }
   .board-panel {
     position: fixed; inset: 0; top: 0; max-height: none; z-index: 50; border-radius: 0;
@@ -433,8 +492,9 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
   .d-cloud-1 { width: 56px; top: 14px; left: 40%; }
   .thesis-head { grid-template-columns: 1fr; }
   .thesis-art { width: 96px; grid-row: 1; }
-  .nav { padding: 14px 16px; }
-  .nav nav a { padding: 6px 9px; font-size: .93rem; }
+  .nav { padding: 12px 16px; flex-wrap: wrap; row-gap: 8px; }
+  .nav nav { width: 100%; justify-content: space-between; }
+  .nav nav a { padding: 6px 12px; font-size: .93rem; }
   .wordmark { font-size: 1.05rem; gap: 8px; }
   .card-head { grid-template-columns: 48px 1fr auto; gap: 12px; }
   .ring, .ring svg { width: 48px; height: 48px; }
@@ -449,7 +509,7 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
   .bars { grid-template-columns: 1fr; }
   .sent li { grid-template-columns: 1fr auto; }
   .sent-when { grid-row: 2; font-size: .82rem; }
-  .sent li .btn { grid-row: 1 / span 2; grid-column: 2; }
+  .sent-actions { grid-row: 1 / span 2; grid-column: 2; flex-direction: column; }
   .trow { grid-template-columns: 1fr; }
   fieldset { padding: 18px; }
 }

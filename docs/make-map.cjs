@@ -38,6 +38,7 @@ const BOXES = [
   [6, 6, ['Approves in the folder:', 'Send = approve, or Skip;', 'marks replies. Nothing', 'sends without him'], { bold: true }],
   [7, 6, ['6 am summary to Rohit;', 'sends each approved', 'email; startup never', 'drafted again']],
   [8, 6, ['Gets a personal', 'email right after', 'the raise']],
+  [2, 6, ['Pulse page: Gemini’s', 'daily startup summary,', 'news (non-fits hidden),', 'rounds you missed,', 'your startups in news']],
 ];
 
 // Orthogonal dashed arrows as point lists
@@ -52,6 +53,7 @@ const ARROWS = [
   [[cx(3), T(6)], [cx(3), B(5)]], // rohit edits thesis
   [[cx(5) + 50, T(4)], [cx(5) + 50, cy(3)], [L(6), cy(3)]], // gemini -> brief
   [[cx(6), B(3)], [cx(6), T(6)]], // brief -> rohit
+  [[R(5), cy(4) - 30], [R(6) + 13, cy(4) - 30], [R(6) + 13, cy(2)], [R(6) + 2, cy(2)]], // gemini summary -> pulse
   [[cx(6), B(6)], [cx(6), T(7)]], // rohit -> resend
   [[cx(6), B(7)], [cx(6), T(8)]], // resend -> founder
 ];

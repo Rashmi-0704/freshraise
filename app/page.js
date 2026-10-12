@@ -34,6 +34,7 @@ export const maxDuration = 300; // the "Check for new rounds" button runs the pi
 const IST = 'Asia/Kolkata';
 
 async function load() {
+  const testTo = testRecipient();
   await ensureSchema();
   await archiveStaleDrafts(); // the folder only holds announcements from the last ARCHIVE_DAYS days
   const usdInr = await getUsdInr();
@@ -52,7 +53,7 @@ async function load() {
            count(*) FILTER (WHERE sent_at >= now() - interval '7 days')::int AS sent_week
     FROM drafts WHERE status = 'sent'`;
   const sentList = await sql`
-    SELECT d.id, s.name, d.sent_at, d.replied_at
+    SELECT d.id, s.name, d.sent_at, d.replied_at, d.to_email, d.subject, d.body, d.domain
     FROM drafts d JOIN startups s ON s.id = d.startup_id
     WHERE d.status = 'sent' ORDER BY d.sent_at DESC LIMIT 20`;
   return {
@@ -80,8 +81,15 @@ async function load() {
     sentList: sentList.map((d) => ({
       id: d.id,
       name: d.name,
+      domain: d.domain,
       replied_at: iso(d.replied_at),
       sent_label: new Date(d.sent_at).toLocaleString('en-IN', { timeZone: IST, day: 'numeric', month: 'short' }),
+      sent_full: new Date(d.sent_at).toLocaleString('en-IN', {
+        timeZone: IST, day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: '2-digit',
+      }),
+      to: testTo ? `${testTo} (test mode, meant for ${d.to_email || 'the founder'})` : d.to_email,
+      subject: rupeesInText(d.subject, usdInr),
+      body: rupeesInText(d.body, usdInr),
     })),
   };
 }
