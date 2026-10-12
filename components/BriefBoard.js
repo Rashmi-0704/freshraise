@@ -1,0 +1,250 @@
+'use client';
+
+import { useEffect, useState, useTransition } from 'react';
+import SunRing from './SunRing';
+import { RoundIcon, PlaneIcon, BuildingIcon, PeopleIcon } from './Doodles';
+import { sendDraft, skipDraft } from '@/app/actions';
+
+const WIDE = '(min-width: 900px)';
+
+// The Morning Brief: a compact list of startups on the left, and the selected one's full details
+// (background, founders, editable email) in a panel on the right. On phones the panel slides in over the list.
+export default function BriefBoard({ drafts, now, testMode }) {
+  const [selected, setSelected] = useState(null);
+  const [done, setDone] = useState({}); // draft id -> { status: 'sent' | 'skipped', to }
+
+  // On a wide screen, open the first startup so the panel is never empty
+  useEffect(() => {
+    if (drafts.length && window.matchMedia(WIDE).matches) setSelected((s) => s ?? drafts[0].id);
+  }, [drafts]);
+
+  // Esc closes the panel on phones
+  useEffect(() => {
+    const onKey = (e) => e.key === 'Escape' && !window.matchMedia(WIDE).matches && setSelected(null);
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
+  const finish = (id, result) => {
+    setDone((d) => ({ ...d, [id]: result }));
+    // Move on to the next startup still waiting
+    const next = drafts.find((d) => d.id !== id && !done[d.id]);
+    if (result.status === 'skipped') setSelected(next ? next.id : null);
+  };
+
+  return (
+    <div className={`board${selected ? ' has-selection' : ''}`}>
+      <ul className="board-list" aria-label="Startups that fit">
+        {drafts.map((d) => (
+          <li key={d.id}>
+            <CardSummary
+              draft={d}
+              now={now}
+              active={selected === d.id}
+              result={done[d.id]}
+              onOpen={() => setSelected(d.id)}
+            />
+          </li>
+        ))}
+      </ul>
+
+      <div className="board-panel">
+        {drafts.map((d) => (
+          // Every panel stays mounted (just hidden), so edits survive switching between startups
+          <DraftPanel
+            key={d.id}
+            draft={d}
+            hidden={selected !== d.id}
+            testMode={testMode}
+            result={done[d.id]}
+            onFinish={(r) => finish(d.id, r)}
+            onClose={() => setSelected(null)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function CardSummary({ draft, now, active, result, onOpen }) {
+  return (
+    <button
+      className={`card card-summary${active ? ' is-active' : ''}${result ? ' is-done' : ''}`}
+      onClick={onOpen}
+      aria-pressed={active}
+      aria-controls={`panel-${draft.id}`}
+    >
+      <span className="card-head">
+        <SunRing announcedAt={draft.announced_at} now={now} />
+        <span className="card-title">
+          <span className="card-name">{draft.name}</span>
+          <span className="card-round">
+            <span className="chip">
+              <RoundIcon round={draft.round_type} />
+              {draft.round_type || 'Seed'}
+            </span>
+            {draft.amount && <span className="amount">{draft.amount}</span>}
+          </span>
+          {draft.one_liner && <span className="card-oneliner">{draft.one_liner}</span>}
+          <span className="card-meta">{[draft.sector, draft.location].filter(Boolean).join(', ')}</span>
+        </span>
+        <span className="score" title="Fit with your thesis, out of 100">
+          {draft.fit_score}
+          <small>fit</small>
+        </span>
+      </span>
+      {result && (
+        <span className="card-status">
+          {result.status === 'sent' ? (
+            <>
+              <PlaneIcon /> Sent
+            </>
+          ) : (
+            'Skipped'
+          )}
+        </span>
+      )}
+    </button>
+  );
+}
+
+function DraftPanel({ draft, hidden, testMode, result, onFinish, onClose }) {
+  const [to, setTo] = useState(draft.to_email || '');
+  const [subject, setSubject] = useState(draft.subject);
+  const [body, setBody] = useState(draft.body);
+  const [error, setError] = useState('');
+  const [pending, start] = useTransition();
+
+  const send = () =>
+    start(async () => {
+      const r = await sendDraft(draft.id, { to, subject, body });
+      if (r.ok) onFinish({ status: 'sent', to: r.to });
+      else setError(r.error);
+    });
+  const skip = () =>
+    start(async () => {
+      await skipDraft(draft.id);
+      onFinish({ status: 'skipped' });
+    });
+
+  const research = (draft.research_notes || '').split('\n').filter(Boolean);
+  const website = draft.website && (draft.website.startsWith('http') ? draft.website : `https://${draft.website}`);
+
+  return (
+    <article id={`panel-${draft.id}`} className="panel" hidden={hidden} aria-label={`${draft.name} details`}>
+      <header className="panel-head">
+        <div>
+          <h2>{draft.name}</h2>
+          <p className="panel-sub">
+            {[draft.round_type, draft.amount].filter(Boolean).join(' · ')}
+            {draft.investors ? ` · backed by ${draft.investors}` : ''}
+          </p>
+        </div>
+        <span className="score" title="Fit with your thesis, out of 100">
+          {draft.fit_score}
+          <small>fit</small>
+        </span>
+        <button className="panel-close" onClick={onClose} aria-label="Close details">
+          ×
+        </button>
+      </header>
+      <p className="reason">{draft.fit_reason}</p>
+
+      {result ? (
+        <p className={`panel-done${result.status === 'sent' ? ' is-sent' : ''}`}>
+          {result.status === 'sent' && <PlaneIcon />}
+          {result.status === 'sent' ? `Sent to ${result.to}.` : 'Skipped. It won’t come back.'}
+        </p>
+      ) : (
+        <>
+          <div className="dossier">
+            <section className="dossier-box">
+              <h3><BuildingIcon /> About the company</h3>
+              <p>{draft.about || draft.one_liner || 'No background found yet.'}</p>
+              <dl className="facts">
+                {draft.founded && (<><dt>Founded</dt><dd>{draft.founded}</dd></>)}
+                {(draft.hq || draft.location) && (<><dt>Based in</dt><dd>{draft.hq || draft.location}</dd></>)}
+                {draft.sector && (<><dt>Sector</dt><dd>{draft.sector}</dd></>)}
+                {draft.amount && (<><dt>Raised</dt><dd>{draft.amount}{draft.round_type ? `, ${draft.round_type}` : ''}</dd></>)}
+              </dl>
+            </section>
+            <section className="dossier-box">
+              <h3><PeopleIcon /> Who you’re writing to</h3>
+              {draft.founder_bios?.length > 0 ? (
+                <ul className="people">
+                  {draft.founder_bios.map((b) => (
+                    <li key={b.name}>
+                      <span className="avatar" aria-hidden="true">{b.name.trim().charAt(0)}</span>
+                      <span>
+                        <strong>{b.name}</strong>
+                        {b.role && <span className="role">{b.role}</span>}
+                        {b.background && <span className="bio">{b.background}</span>}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>{draft.founders ? `Founders: ${draft.founders}` : 'Founder names weren’t found. The email greets the team.'}</p>
+              )}
+            </section>
+          </div>
+
+          <label className="field">
+            <span>To</span>
+            <input
+              type="email"
+              value={to}
+              onChange={(e) => setTo(e.target.value)}
+              placeholder={testMode ? 'Optional in test mode' : 'founder@company.com'}
+            />
+          </label>
+          <label className="field">
+            <span>Subject</span>
+            <input value={subject} onChange={(e) => setSubject(e.target.value)} />
+          </label>
+          <textarea
+            className="letter-body"
+            value={body}
+            onChange={(e) => setBody(e.target.value)}
+            rows={Math.min(14, body.split('\n').length + 2)}
+            aria-label="Email message"
+          />
+
+          {error && <p className="form-error" role="alert">{error}</p>}
+
+          <div className="actions">
+            <button className="btn btn-sun btn-icon" onClick={send} disabled={pending}>
+              <PlaneIcon />
+              {pending ? 'Sending…' : 'Send email'}
+            </button>
+            <button className="btn btn-ghost" onClick={skip} disabled={pending}>
+              Skip startup
+            </button>
+          </div>
+
+          {research.length > 0 && (
+            <div className="research">
+              <h3>What the research found</h3>
+              <ul>
+                {research.map((r, i) => (
+                  <li key={i}>{r}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <p className="links">
+            <a href={draft.source_url} target="_blank" rel="noreferrer">
+              Read the announcement on {draft.source_name}
+            </a>
+            {website && (
+              <a href={website} target="_blank" rel="noreferrer">
+                Visit their website
+              </a>
+            )}
+          </p>
+        </>
+      )}
+    </article>
+  );
+}

@@ -1,5 +1,5 @@
 import Horizon from '@/components/Horizon';
-import DraftCard from '@/components/DraftCard';
+import BriefBoard from '@/components/BriefBoard';
 import RunButton from '@/components/RunButton';
 import SentList from '@/components/SentList';
 import { QuietMorning } from '@/components/Doodles';
@@ -102,7 +102,7 @@ export default async function Home() {
     <main>
       <section className="hero">
         <Horizon hour={hour} />
-        <div className="wrap hero-text">
+        <div className="wrap wrap-wide hero-text">
           <p className="hello">{greeting(hour)}, {data?.name || 'Rohit'}.</p>
           <h1>
             {setupError
@@ -121,14 +121,14 @@ export default async function Home() {
           {!setupError && (
             <p className="lede">
               {data.drafts.length
-                ? 'Each draft is researched and ready. Open one, adjust anything, and send.'
+                ? 'Each draft is researched and ready. Pick a startup and its details open alongside.'
                 : 'New drafts appear here every morning. You can also check right now.'}
             </p>
           )}
         </div>
       </section>
 
-      <div className="wrap">
+      <div className="wrap wrap-wide">
         {setupError ? (
           <div className="notice notice-error">
             <h2>Connect the database</h2>
@@ -149,11 +149,7 @@ export default async function Home() {
               </p>
             )}
 
-            <section className="list" aria-label="Draft emails">
-              {data.drafts.map((d) => (
-                <DraftCard key={d.id} draft={d} now={now} testMode={Boolean(testTo)} />
-              ))}
-            </section>
+            {data.drafts.length > 0 && <BriefBoard drafts={data.drafts} now={now} testMode={Boolean(testTo)} />}
 
             {data.drafts.length === 0 && (
               <div className="empty">

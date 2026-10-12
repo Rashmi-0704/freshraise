@@ -37,6 +37,7 @@ a { color: inherit; }
 :focus-visible { outline: 2.5px solid var(--sun-deep); outline-offset: 2px; border-radius: 4px; }
 
 .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+.wrap-wide { max-width: 1180px; }
 
 /* ---------- Nav ---------- */
 .nav {
@@ -151,30 +152,43 @@ h1 {
 .notice-ok { background: #eef6ee; color: #23502c; border-left-color: #4b9a5a; }
 .notice-error { background: #fbeef3; color: #6e2343; border-left-color: var(--dusk); margin-top: 28px; }
 
-/* ---------- Draft cards ---------- */
-.list { display: grid; gap: 14px; }
+/* ---------- Morning Brief: startup list on the left, details panel on the right ---------- */
+.board { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }
+.board-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
 .card {
   background: var(--paper);
   border-radius: 16px;
   box-shadow: 0 0 0 1px var(--line);
-  overflow: hidden;
 }
-.card.is-open { box-shadow: 0 0 0 1.5px var(--ink), 0 18px 40px -24px rgba(30, 37, 71, .45); }
-.card-head {
-  all: unset; box-sizing: border-box; cursor: pointer; width: 100%;
-  display: grid; grid-template-columns: 56px 1fr auto; gap: 16px; align-items: center;
-  padding: 18px 20px 6px;
+.card-summary {
+  font: inherit; color: inherit; text-align: left; border: 0; cursor: pointer; width: 100%; display: block;
+  padding: 14px 16px; position: relative; transition: box-shadow .15s ease, transform .15s ease;
 }
-.card-head:focus-visible { outline: 2.5px solid var(--sun-deep); outline-offset: -4px; border-radius: 16px; }
+.card-summary:hover { box-shadow: 0 0 0 1px var(--muted); }
+.card-summary:focus-visible { outline: 2.5px solid var(--sun-deep); outline-offset: 2px; }
+.card-summary.is-active { box-shadow: 0 0 0 2px var(--ink), 0 14px 30px -22px rgba(30, 37, 71, .55); }
+.card-summary.is-active::after {
+  content: ''; position: absolute; right: -11px; top: 50%; width: 18px; height: 18px; translate: 0 -50%; rotate: 45deg;
+  background: var(--paper); box-shadow: 2px -2px 0 0 var(--ink); border-radius: 2px;
+}
+.card-summary.is-done { opacity: .62; }
+.card-head { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; }
+.card-status {
+  display: inline-flex; align-items: center; gap: 6px; margin: 10px 0 0 64px;
+  font-size: .85rem; font-weight: 700; color: var(--sun-deep);
+}
 .card-title { display: grid; gap: 1px; min-width: 0; }
-.card-name { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+.card-name { font-size: 1.18rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
 .card-round { font-weight: 500; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin: 4px 0 2px; }
 .chip {
   display: inline-flex; align-items: center; gap: 5px; padding: 2px 9px 2px 7px; border-radius: 999px;
   background: #e9f4ea; color: #2f5d36; box-shadow: inset 0 0 0 1px #c3e0c6; font-size: .86rem; font-weight: 700;
 }
 .amount { font-weight: 800; letter-spacing: -0.01em; }
-.card-oneliner { font-size: .95rem; color: var(--ink); opacity: .85; margin: 2px 0 1px; }
+.card-oneliner {
+  font-size: .9rem; color: var(--ink); opacity: .85; margin: 2px 0 1px;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
 
 /* Company background, shown above the email when a card is open */
 .dossier { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
@@ -199,7 +213,7 @@ h1 {
   font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em; font-variant-numeric: tabular-nums;
 }
 .score small { font-size: .75rem; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-top: 4px; }
-.reason { margin: 4px 20px 18px 92px; color: var(--muted); font-size: .95rem; max-width: 60ch; }
+.reason { margin: 10px 0 18px; color: var(--muted); font-size: .95rem; }
 
 /* Countdown ring */
 .ring { position: relative; width: 56px; height: 56px; }
@@ -217,13 +231,29 @@ h1 {
 .ring-late .ring-fill { stroke: var(--dusk); }
 .ring-unknown .ring-fill { stroke: var(--line); }
 
-/* The letter: where the draft lives */
-.letter {
-  border-top: 1px dashed var(--line);
-  padding: 20px 20px 22px 92px;
-  animation: unfold .22s ease-out;
+/* The details panel: stays in view on the right while the list scrolls */
+.board-panel {
+  position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; overflow-x: hidden;
+  border-radius: 16px; padding: 1px; /* room for the panel's outline */
 }
-@keyframes unfold { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+.panel {
+  background: var(--paper); border-radius: 16px; box-shadow: 0 0 0 1px var(--line), 0 18px 40px -28px rgba(30, 37, 71, .5);
+  padding: 20px 22px 22px; animation: unfold .2s ease-out;
+}
+@keyframes unfold { from { opacity: 0; transform: translateX(8px); } to { opacity: 1; transform: none; } }
+.panel-head { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; align-items: start; }
+.panel-head h2 { margin: 0; font-size: 1.6rem; letter-spacing: -0.03em; line-height: 1.15; }
+.panel-sub { margin: 4px 0 0; font-weight: 500; }
+.panel-close {
+  display: none; font: inherit; font-size: 1.6rem; line-height: 1; width: 40px; height: 40px; border-radius: 50%;
+  border: 0; background: var(--bg); color: var(--ink); cursor: pointer;
+}
+.panel-done {
+  display: flex; align-items: center; gap: 8px; margin: 6px 0 0; padding: 14px 16px; border-radius: 12px;
+  background: var(--bg); color: var(--muted);
+}
+.panel-done.is-sent { color: var(--ink); }
+.panel-done.is-sent .icon { color: var(--sun-deep); animation: fly-off .6s ease-out both; }
 .field {
   display: grid; grid-template-columns: 70px 1fr; align-items: center; gap: 10px;
   border-bottom: 1px solid var(--line); padding: 6px 0;
@@ -250,11 +280,6 @@ h1 {
 .form-error { margin: 14px 0 0; color: var(--dusk); font-weight: 500; }
 .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 20px; }
 
-.card-done { padding: 14px 20px; background: transparent; box-shadow: 0 0 0 1px var(--line); }
-.card-done p { margin: 0; color: var(--muted); }
-.card-done strong { color: var(--ink); }
-.card-done.is-sent p { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.card-done.is-sent .icon { color: var(--sun-deep); animation: fly-off .6s ease-out both; }
 @keyframes fly-off { from { translate: -12px 8px; opacity: 0; } to { translate: 0 0; opacity: 1; } }
 
 /* Sent emails and replies */
@@ -318,6 +343,20 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
 .tfield-score input { max-width: 110px; font-size: 1.2rem; font-weight: 700; }
 .tfoot { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
 
+/* ---------- Narrower screens: the details panel slides in over the list ---------- */
+@media (max-width: 899px) {
+  .board { grid-template-columns: 1fr; }
+  .card-summary.is-active::after { display: none; }
+  .board-panel {
+    position: fixed; inset: 0; top: 0; max-height: none; z-index: 50; border-radius: 0;
+    background: var(--bg); padding: 12px; overflow-y: auto; overscroll-behavior: contain;
+    transform: translateX(100%); visibility: hidden; transition: transform .25s ease, visibility 0s linear .25s;
+  }
+  .has-selection .board-panel { transform: none; visibility: visible; transition: transform .25s ease; }
+  .panel-close { display: grid; place-items: center; }
+  .panel { padding: 18px 16px 20px; }
+}
+
 /* ---------- Small screens ---------- */
 @media (max-width: 640px) {
   .horizon { height: 120px; }
@@ -334,10 +373,10 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
   .nav { padding: 14px 16px; }
   .nav nav a { padding: 6px 9px; font-size: .93rem; }
   .wordmark { font-size: 1.05rem; gap: 8px; }
-  .card-head { grid-template-columns: 48px 1fr auto; gap: 12px; padding: 16px 16px 6px; }
+  .card-head { grid-template-columns: 48px 1fr auto; gap: 12px; }
   .ring, .ring svg { width: 48px; height: 48px; }
-  .reason { margin: 4px 16px 16px; }
-  .letter { padding: 18px 16px 20px; }
+  .card-status { margin-left: 60px; }
+  .panel-head h2 { font-size: 1.35rem; }
   .dossier { grid-template-columns: 1fr; }
   .sent li { grid-template-columns: 1fr auto; }
   .sent-when { grid-row: 2; font-size: .82rem; }
@@ -347,6 +386,6 @@ legend { float: left; width: 100%; padding: 0; font-weight: 700; font-size: 1.15
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .sun, .letter, .horizon svg, .horizon svg *, .empty-art .steam, .is-launching .icon-rocket, .card-done .icon { animation: none; }
-  .btn, .btn-icon .icon { transition: none; }
+  .sun, .panel, .horizon svg, .horizon svg *, .empty-art .steam, .is-launching .icon-rocket, .panel-done .icon { animation: none; }
+  .btn, .btn-icon .icon, .board-panel, .card-summary { transition: none; }
 }

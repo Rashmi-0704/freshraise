@@ -40,9 +40,10 @@ All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted
 
 ## Using it
 
-- **Morning Brief** (`/`): one card per startup that fits. Closed, a card shows the round, amount in ₹, fit score, a
-  one-line description, and a ring counting down the 60-day outreach window. Open it to see the company background,
-  the founders you're writing to, and the editable email.
+- **Morning Brief** (`/`): a compact list of every startup that fits on the left (round, amount in ₹, fit score, a
+  one-line description, and a ring counting down the 60-day outreach window). Click one and its company background,
+  the founders you're writing to, and the editable email open in a panel on the right, so there's no long scrolling.
+  On a phone the panel slides in over the list.
 - **Sent so far** (on the Morning Brief): every email sent, a **Mark replied** button, and the reply rate.
 - **Thesis** (`/thesis`): sectors, stages, geography, round size, exclusions, minimum fit score and program pitch.
   **Re-score with this thesis** applies a changed thesis to the startups already waiting: drafts that no longer fit
