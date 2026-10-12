@@ -20,7 +20,7 @@ const W = X0 + ACTOR_W + COL_W * COLS.length + X0;
 const H = ROW_Y0 + ROW_H * ROWS.length + 70;
 const cx = (c) => X0 + ACTOR_W + (c - 1) * COL_W + COL_W / 2;
 const cy = (r) => ROW_Y0 + (r - 1) * ROW_H + ROW_H / 2;
-const BW = 240, BH = 104;
+const BW = 240, BH = 118;
 const L = (c) => cx(c) - BW / 2, R = (c) => cx(c) + BW / 2;
 const T = (r) => cy(r) - BH / 2, B = (r) => cy(r) + BH / 2;
 
@@ -33,8 +33,8 @@ const BOXES = [
   [5, 3, ['Thesis row, plus', 'memory of every seen', 'URL and past startup']],
   [6, 3, ['Sets the thesis', '(₹ round size, min score)', 'and re-scores the', 'startups waiting']],
   [3, 4, ['Keeps last 24h,', 'funding news, unseen', 'URLs; blocks repeat', 'names + websites']],
-  [4, 5, ['Screens seed rounds,', 'scores fit vs thesis,', 'researches founders,', 'drafts the email']],
-  [3, 6, ['Draft folder: New today', '(24h) / Still pending,', 'background + draft;', 'archived after 7 days']],
+  [4, 5, ['Screens seed rounds,', 'scores fit vs thesis', '(4 checks, 0–5 each),', 'researches founders,', 'drafts the email']],
+  [3, 6, ['Draft folder: tiles,', 'New today (24h) / Pending,', 'score bars, founders +', 'LinkedIn, the draft;', 'archived after 7 days']],
   [6, 6, ['Approves in the folder:', 'Send = approve, or Skip;', 'marks replies. Nothing', 'sends without him'], { bold: true }],
   [7, 6, ['6 am summary to Rohit;', 'sends each approved', 'email; startup never', 'drafted again']],
   [8, 6, ['Gets a personal', 'email right after', 'the raise']],
@@ -99,8 +99,9 @@ BOXES.forEach(([r, c, lines, extra = {}]) => {
   const row = ROWS[r - 1];
   const x = L(c), y = T(r);
   out.push(`<rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="12" fill="${row.fill}" stroke="${row.stroke}" stroke-width="${extra.bold ? 3.4 : 2.2}"/>`);
-  const first = cy(r) - ((lines.length - 1) * 25) / 2 + 6;
-  lines.forEach((t, k) => out.push(`<text x="${cx(c)}" y="${first + k * 25}" text-anchor="middle" font-size="17.5" fill="#1e2a47">${esc(t)}</text>`));
+  const step = lines.length > 4 ? 22 : 25; // 5-line boxes sit a little tighter
+  const first = cy(r) - ((lines.length - 1) * step) / 2 + 6;
+  lines.forEach((t, k) => out.push(`<text x="${cx(c)}" y="${first + k * step}" text-anchor="middle" font-size="${lines.length > 4 ? 16.5 : 17.5}" fill="#1e2a47">${esc(t)}</text>`));
   if (extra.bold) {
     // Label sits in the empty cell to the left, clear of the arrows
     out.push(`<text x="${L(c) - 16}" y="${cy(r) - 4}" text-anchor="end" font-size="16" font-weight="800" fill="${row.stroke}">HUMAN</text>`);
