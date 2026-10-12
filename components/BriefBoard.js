@@ -9,7 +9,7 @@ const WIDE = '(min-width: 900px)';
 
 // The Morning Brief: a compact list of startups on the left, and the selected one's full details
 // (background, founders, editable email) in a panel on the right. On phones the panel slides in over the list.
-export default function BriefBoard({ drafts, now, testMode }) {
+export default function BriefBoard({ drafts, now, testMode, newHours, archiveDays }) {
   const [selected, setSelected] = useState(null);
   const [done, setDone] = useState({}); // draft id -> { status: 'sent' | 'skipped', to }
 
@@ -32,21 +32,44 @@ export default function BriefBoard({ drafts, now, testMode }) {
     if (result.status === 'skipped') setSelected(next ? next.id : null);
   };
 
+  const fresh = drafts.filter((d) => d.is_new);
+  const pending = drafts.filter((d) => !d.is_new);
+  const list = (items, label) => (
+    <ul className="board-list" aria-label={label}>
+      {items.map((d) => (
+        <li key={d.id}>
+          <CardSummary
+            draft={d}
+            now={now}
+            windowDays={archiveDays}
+            active={selected === d.id}
+            result={done[d.id]}
+            onOpen={() => setSelected(d.id)}
+          />
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <div className={`board${selected ? ' has-selection' : ''}`}>
-      <ul className="board-list" aria-label="Startups that fit">
-        {drafts.map((d) => (
-          <li key={d.id}>
-            <CardSummary
-              draft={d}
-              now={now}
-              active={selected === d.id}
-              result={done[d.id]}
-              onOpen={() => setSelected(d.id)}
-            />
-          </li>
-        ))}
-      </ul>
+      {/* Rohit's draft folder: nothing leaves it until he approves (Send) or skips */}
+      <section className="folder" aria-label="Draft folder">
+        <h2 className="folder-title">Draft folder</h2>
+        <h3 className="folder-group">
+          New today <span>last {newHours} hours · {fresh.length}</span>
+        </h3>
+        {fresh.length ? list(fresh, 'New today') : <p className="folder-empty">Nothing new in the last {newHours} hours.</p>}
+        {pending.length > 0 && (
+          <>
+            <h3 className="folder-group is-pending">
+              Still pending <span>older · {pending.length}</span>
+            </h3>
+            {list(pending, 'Still pending')}
+            <p className="folder-note">Drafts leave the folder {archiveDays} days after the announcement.</p>
+          </>
+        )}
+      </section>
 
       <div className="board-panel">
         {drafts.map((d) => (
@@ -66,7 +89,7 @@ export default function BriefBoard({ drafts, now, testMode }) {
   );
 }
 
-function CardSummary({ draft, now, active, result, onOpen }) {
+function CardSummary({ draft, now, windowDays, active, result, onOpen }) {
   return (
     <button
       className={`card card-summary${active ? ' is-active' : ''}${result ? ' is-done' : ''}`}
@@ -75,7 +98,7 @@ function CardSummary({ draft, now, active, result, onOpen }) {
       aria-controls={`panel-${draft.id}`}
     >
       <span className="card-head">
-        <SunRing announcedAt={draft.announced_at} now={now} />
+        <SunRing announcedAt={draft.announced_at} now={now} windowDays={windowDays} />
         <span className="card-title">
           <span className="card-name">{draft.name}</span>
           <span className="card-round">

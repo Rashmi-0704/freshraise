@@ -117,6 +117,7 @@ h1 {
 }
 .status p { margin: 0; color: var(--muted); font-size: .95rem; }
 .status .status-error { color: var(--dusk); }
+.status .status-next { color: var(--ink); }
 .run { display: grid; gap: 8px; justify-items: start; }
 .run-note { margin: 0; font-size: .92rem; color: var(--muted); }
 .run-ok { color: var(--ink); }
@@ -155,6 +156,17 @@ h1 {
 /* ---------- Morning Brief: startup list on the left, details panel on the right ---------- */
 .board { display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }
 .board-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.folder { min-width: 0; }
+.folder-title { margin: 0 0 4px; font-size: 1.25rem; letter-spacing: -0.02em; }
+.folder-group {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+  margin: 14px 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--sun);
+  font-size: .95rem; font-weight: 800;
+}
+.folder-group span { font-size: .8rem; font-weight: 600; color: var(--muted); }
+.folder-group.is-pending { border-bottom-color: var(--line); color: var(--muted); }
+.folder-empty { margin: 0; padding: 12px 14px; border-radius: 12px; border: 1px dashed var(--line); color: var(--muted); font-size: .92rem; }
+.folder-note { margin: 10px 2px 0; color: var(--muted); font-size: .82rem; }
 .card {
   background: var(--paper);
   border-radius: 16px;

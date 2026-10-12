@@ -26,7 +26,7 @@ const T = (r) => cy(r) - BH / 2, B = (r) => cy(r) + BH / 2;
 
 // [row, col, lines, extra]
 const BOXES = [
-  [1, 1, ['Vercel Cron fires', 'every day at 6:00 am', 'IST, with a secret']],
+  [1, 1, ['Vercel Cron fires', 'every day at 6:00 am', 'IST; the page shows', 'the next check']],
   [6, 1, ['Clicks “Check for', 'new rounds” at', 'any time']],
   [2, 2, ['10 live RSS feeds:', 'Google News, Inc42,', 'Entrackr, ET Startups,', 'YourStory, TechCrunch']],
   [2, 3, ['Frankfurter: today’s', 'USD → INR rate, so', 'every amount is in ₹']],
@@ -34,8 +34,8 @@ const BOXES = [
   [6, 3, ['Sets the thesis', '(₹ round size, min score)', 'and re-scores the', 'startups waiting']],
   [3, 4, ['Keeps last 24h,', 'funding news, unseen', 'URLs; blocks repeat', 'names + websites']],
   [4, 5, ['Screens seed rounds,', 'scores fit vs thesis,', 'researches founders,', 'drafts the email']],
-  [3, 6, ['Morning Brief: ₹ amount,', 'fit score, background,', 'founders + draft']],
-  [6, 6, ['Reviews, edits, Send', 'or Skip; marks replies.', 'Nothing sends', 'without him'], { bold: true }],
+  [3, 6, ['Draft folder: New today', '(24h) / Still pending,', 'background + draft;', 'archived after 7 days']],
+  [6, 6, ['Approves in the folder:', 'Send = approve, or Skip;', 'marks replies. Nothing', 'sends without him'], { bold: true }],
   [7, 6, ['6 am summary to Rohit;', 'sends each approved', 'email; startup never', 'drafted again']],
   [8, 6, ['Gets a personal', 'email right after', 'the raise']],
 ];

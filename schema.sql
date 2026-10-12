@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS drafts (
   sending_at TIMESTAMPTZ, sent_at TIMESTAMPTZ, replied_at TIMESTAMPTZ
 );
 -- drafts.status: draft | sending | sent | skipped | set_aside (hidden after a re-score said it no longer fits)
+--                | archived (announced more than ARCHIVE_AFTER_DAYS days ago)
 CREATE UNIQUE INDEX IF NOT EXISTS drafts_domain_key ON drafts (domain) WHERE domain <> '';
 CREATE TABLE IF NOT EXISTS runs (
   id SERIAL PRIMARY KEY, trigger TEXT, started_at TIMESTAMPTZ DEFAULT now(), finished_at TIMESTAMPTZ,

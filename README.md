@@ -40,8 +40,10 @@ All amounts are shown in rupees (₹ crore / lakh). Dollar amounts are converted
 
 ## Using it
 
-- **Morning Brief** (`/`): a compact list of every startup that fits on the left (round, amount in ₹, fit score, a
-  one-line description, and a ring counting down the 60-day outreach window). Click one and its company background,
+- **Morning Brief** (`/`): Rohit's **draft folder**, split into **New today** (announced in the last 24 hours) and
+  **Still pending**, with "Next automatic check: around 6:00 am IST" above it. Each startup on the left shows the round,
+  amount in ₹, fit score, a one-line description, and a ring counting down the days before the draft is archived
+  (7 days after the announcement, by the article's publish date). Click one and its company background,
   the founders you're writing to, and the editable email open in a panel on the right, so there's no long scrolling.
   On a phone the panel slides in over the list.
 - **Sent so far** (on the Morning Brief): every email sent, a **Mark replied** button, and the reply rate.
@@ -103,6 +105,7 @@ remove `RESEND_TEST_TO` to send to founders directly.
 | `TIME_BUDGET_MS` | 270000 | How long a run works before stopping, 30s under the 300s limit |
 | `APP_PASSWORD` | empty | If set, the site asks for this password (any username) |
 | `DIGEST_TO` | `RESEND_TEST_TO` | Where the 6 am summary email goes |
+| `ARCHIVE_AFTER_DAYS` | 7 | Drafts leave the folder this many days after the announcement |
 | `USD_INR` | 96 | Backup exchange rate if Frankfurter is unreachable |
 
 ## What changed from the starting code

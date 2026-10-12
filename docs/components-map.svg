@@ -74,9 +74,10 @@
 <path d="M1854 986 L1854 1022" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
 <path d="M1854 1126 L1854 1162" fill="none" stroke="#1e2a47" stroke-width="2.4" stroke-dasharray="8 6" marker-end="url(#head)"/>
 <rect x="284" y="182" width="240" height="104" rx="12" fill="#e3e5fb" stroke="#5b5bd6" stroke-width="2.2"/>
-<text x="404" y="215" text-anchor="middle" font-size="17.5" fill="#1e2a47">Vercel Cron fires</text>
-<text x="404" y="240" text-anchor="middle" font-size="17.5" fill="#1e2a47">every day at 6:00 am</text>
-<text x="404" y="265" text-anchor="middle" font-size="17.5" fill="#1e2a47">IST, with a secret</text>
+<text x="404" y="202.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Vercel Cron fires</text>
+<text x="404" y="227.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">every day at 6:00 am</text>
+<text x="404" y="252.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">IST; the page shows</text>
+<text x="404" y="277.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">the next check</text>
 <rect x="284" y="882" width="240" height="104" rx="12" fill="#ffe1d5" stroke="#e8743b" stroke-width="2.2"/>
 <text x="404" y="915" text-anchor="middle" font-size="17.5" fill="#1e2a47">Clicks “Check for</text>
 <text x="404" y="940" text-anchor="middle" font-size="17.5" fill="#1e2a47">new rounds” at</text>
@@ -110,14 +111,15 @@
 <text x="1564" y="672.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">researches founders,</text>
 <text x="1564" y="697.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">drafts the email</text>
 <rect x="1734" y="462" width="240" height="104" rx="12" fill="#fff1c2" stroke="#d9a400" stroke-width="2.2"/>
-<text x="1854" y="495" text-anchor="middle" font-size="17.5" fill="#1e2a47">Morning Brief: ₹ amount,</text>
-<text x="1854" y="520" text-anchor="middle" font-size="17.5" fill="#1e2a47">fit score, background,</text>
-<text x="1854" y="545" text-anchor="middle" font-size="17.5" fill="#1e2a47">founders + draft</text>
+<text x="1854" y="482.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Draft folder: New today</text>
+<text x="1854" y="507.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">(24h) / Still pending,</text>
+<text x="1854" y="532.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">background + draft;</text>
+<text x="1854" y="557.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">archived after 7 days</text>
 <rect x="1734" y="882" width="240" height="104" rx="12" fill="#ffe1d5" stroke="#e8743b" stroke-width="3.4"/>
-<text x="1854" y="902.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Reviews, edits, Send</text>
-<text x="1854" y="927.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">or Skip; marks replies.</text>
-<text x="1854" y="952.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Nothing sends</text>
-<text x="1854" y="977.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">without him</text>
+<text x="1854" y="902.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Approves in the folder:</text>
+<text x="1854" y="927.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">Send = approve, or Skip;</text>
+<text x="1854" y="952.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">marks replies. Nothing</text>
+<text x="1854" y="977.5" text-anchor="middle" font-size="17.5" fill="#1e2a47">sends without him</text>
 <text x="1718" y="930" text-anchor="end" font-size="16" font-weight="800" fill="#e8743b">HUMAN</text>
 <text x="1718" y="950" text-anchor="end" font-size="16" font-weight="800" fill="#e8743b">BOUNDARY →</text>
 <rect x="1734" y="1022" width="240" height="104" rx="12" fill="#fbd5e5" stroke="#d6457f" stroke-width="2.2"/>

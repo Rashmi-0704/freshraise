@@ -7,6 +7,8 @@ import { sql, ensureSchema } from '@/lib/db';
 import { testRecipient } from '@/lib/resend';
 import { iso } from '@/lib/util';
 import { getUsdInr, inrLabel, rupeesInText } from '@/lib/money';
+import { archiveStaleDrafts } from '@/lib/pipeline';
+import { ARCHIVE_DAYS, NEW_HOURS, isNew, nextCheckLabel } from '@/lib/schedule';
 
 function parseBios(raw) {
   try {
@@ -24,6 +26,7 @@ const IST = 'Asia/Kolkata';
 
 async function load() {
   await ensureSchema();
+  await archiveStaleDrafts(); // the folder only holds announcements from the last ARCHIVE_DAYS days
   const usdInr = await getUsdInr();
   const drafts = await sql`
     SELECT d.id, d.to_email, d.founders, d.website, d.research_notes, d.subject, d.body,
@@ -47,6 +50,7 @@ async function load() {
       return {
         ...d,
         announced_at: iso(d.announced_at),
+        is_new: isNew(d.announced_at), // from the article's publish date
         amount: inrLabel(d.amount, usdInr),
         fit_reason: inr(d.fit_reason),
         about: inr(d.about),
@@ -97,6 +101,8 @@ export default async function Home() {
   }
   const now = Date.now();
   const testTo = testRecipient();
+  const newCount = data ? data.drafts.filter((d) => d.is_new).length : 0;
+  const pendingCount = data ? data.drafts.length - newCount : 0;
 
   return (
     <main>
@@ -105,24 +111,34 @@ export default async function Home() {
         <div className="wrap wrap-wide hero-text">
           <p className="hello">{greeting(hour)}, {data?.name || 'Rohit'}.</p>
           <h1>
-            {setupError
-              ? 'Almost ready.'
-              : data.drafts.length === 0
-                ? <>You’re all <span className="mark">caught up.</span></>
-                : (
-                  <>
-                    <span className="mark">
-                      {data.drafts.length} {data.drafts.length === 1 ? 'founder' : 'founders'}
-                    </span>{' '}
-                    just raised and fit your thesis.
-                  </>
-                )}
+            {setupError ? (
+              'Almost ready.'
+            ) : newCount > 0 ? (
+              <>
+                <span className="mark">
+                  {newCount} {newCount === 1 ? 'founder' : 'founders'}
+                </span>{' '}
+                raised in the last {NEW_HOURS} hours and fit your thesis.
+              </>
+            ) : pendingCount > 0 ? (
+              <>
+                No new rounds in the <span className="mark">last {NEW_HOURS} hours.</span>
+              </>
+            ) : (
+              <>
+                You’re all <span className="mark">caught up.</span>
+              </>
+            )}
           </h1>
           {!setupError && (
             <p className="lede">
-              {data.drafts.length
-                ? 'Each draft is researched and ready. Pick a startup and its details open alongside.'
-                : 'New drafts appear here every morning. You can also check right now.'}
+              {newCount > 0
+                ? `Their drafts are in your folder, researched and ready.${
+                    pendingCount ? ` ${pendingCount} older ${pendingCount === 1 ? 'draft is' : 'drafts are'} still pending.` : ''
+                  }`
+                : pendingCount > 0
+                  ? `${pendingCount} ${pendingCount === 1 ? 'draft' : 'drafts'} from earlier this week ${pendingCount === 1 ? 'is' : 'are'} still pending in your folder. Drafts leave the folder ${ARCHIVE_DAYS} days after the announcement.`
+                  : 'Fresh drafts land in your folder every morning. You can also check right now.'}
             </p>
           )}
         </div>
@@ -139,6 +155,9 @@ export default async function Home() {
           <>
             <div className="status">
               <p>{runSentence(data.run)}</p>
+              <p className="status-next">
+                <strong>Next automatic check:</strong> {nextCheckLabel(now)}
+              </p>
               {data.run?.error && <p className="status-error">Last check hit a problem: {data.run.error}</p>}
               <RunButton />
             </div>
@@ -149,12 +168,20 @@ export default async function Home() {
               </p>
             )}
 
-            {data.drafts.length > 0 && <BriefBoard drafts={data.drafts} now={now} testMode={Boolean(testTo)} />}
+            {data.drafts.length > 0 && (
+              <BriefBoard
+                drafts={data.drafts}
+                now={now}
+                testMode={Boolean(testTo)}
+                newHours={NEW_HOURS}
+                archiveDays={ARCHIVE_DAYS}
+              />
+            )}
 
             {data.drafts.length === 0 && (
               <div className="empty">
                 <QuietMorning className="empty-art" />
-                <p className="hand">Quiet morning. No fresh rounds yet, so enjoy the chai.</p>
+                <p className="hand">Quiet morning. Your draft folder is empty, so enjoy the chai.</p>
               </div>
             )}
 

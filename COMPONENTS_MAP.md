@@ -14,7 +14,7 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 
 | Step | Component | Tool | What it does | Status |
 |---|---|---|---|---|
-| Trigger | Daily run | **Vercel Cron** (`vercel.json`, `app/api/cron/route.js`) | Runs the pipeline at 00:30 UTC (6:00 am IST), protected by `CRON_SECRET` | ✅ Registered |
+| Trigger | Daily run | **Vercel Cron** (`vercel.json`, `app/api/cron/route.js`) | Runs the pipeline at 00:30 UTC (6:00 am IST), protected by `CRON_SECRET`; the Morning Brief shows "Next automatic check" | ✅ Registered |
 | Trigger (manual) | "Check for new rounds" button | Next.js server action (`app/actions.js`) | Same pipeline, on demand | ✅ Live |
 | Input | Live news | 10 free RSS feeds (`lib/feeds.js`): 5 Google News searches, Inc42, Entrackr, ET Startups, YourStory, TechCrunch | Pulls about 190 articles in parallel, no API keys | ✅ All 10 working |
 | Processing | Filter | `lib/pipeline.js` | Keeps the last 24 hours, funding-looking titles, no Series B+, never-seen URLs; up to 100 articles | ✅ |
@@ -25,7 +25,7 @@ PNG version for slides: [docs/components-map.png](docs/components-map.png)
 | AI | Research + draft | **Gemini Flash + Google Search** | Finds website, company background, founders with roles and backgrounds, then writes a short email | ✅ |
 | Context | Rupees | **Frankfurter** (free, no key, ECB rates; `lib/money.js`) | Converts dollar amounts to ₹ crore / lakh at today's rate | ✅ |
 | Storage | Everything | **Neon Postgres** (replaces Supabase, approved) | `thesis`, `articles`, `startups`, `drafts`, `runs` tables, created automatically | ✅ |
-| Output | Morning Brief | Next.js 14 on **Vercel** (Singapore region) | Draft cards: round, ₹ amount, fit score, 60-day ring, company background, founders, editable email | ✅ |
+| Output | Draft folder (Morning Brief) | Next.js 14 on **Vercel** (Singapore region) | Rohit's draft folder, split into **New today** (announced in the last 24 hours) and **Still pending**; each draft shows round, ₹ amount, fit score, a ring counting down the days left, company background, founders and the editable email. Drafts are archived 7 days after the announcement (article publish date) | ✅ |
 | Output | Send | **Resend** (`lib/resend.js`) | Sends the approved email; test mode sends to our own inbox | ✅ Test email received |
 | Output | Morning email | **Resend** (`lib/digest.js`) | After the 6 am run, emails Rohit the drafts waiting (₹ amount, fit) and a link, or a problem report if the run failed; nothing on a quiet morning | ✅ Test email sent |
 | Output | Replies | Morning Brief, "Sent so far" | Rohit marks which founders replied; shows sent → replied (%) | ✅ |
@@ -46,6 +46,23 @@ Vercel Cron (6 am IST) ─┐
 
 **Cost:** ₹0. Every tool runs on a free tier with no credit card: Gemini (AI Studio), Neon, Resend, Vercel Hobby,
 GitHub, RSS feeds and Frankfurter.
+
+## Why the draft folder is in the app, not in Gmail
+
+The brief asks for drafts "sitting in Rohit's draft folder." FreshRaise's Morning Brief **is** that folder: every
+researched email waits there, and **Send is the approval step**, so nothing reaches a founder until Rohit clicks it.
+We chose this over writing real Gmail drafts (Gmail API `users.drafts.create`) because:
+
+- **Hard rule 5** says emails are sent with Resend. Gmail drafts would be sent from Gmail instead.
+- The Gmail API needs Rohit to sign in with Google and grant mailbox access (OAuth), which adds setup and risk for a
+  daily tool.
+- The in-app folder can show what a Gmail draft can't: the fit score and reason, company background, founders, the
+  time left, and the reply rate.
+
+**Freshness rules** (from the article's publish date, not when we read it): drafts announced in the last 24 hours
+sit under **New today**; older ones sit under **Still pending**; after 7 days (`ARCHIVE_AFTER_DAYS`) they're archived,
+not deleted, so the startup still counts for "never contact twice". The morning email only goes out when something is
+new today.
 
 ## The Nine Checks: does this deserve to be built?
 
@@ -95,4 +112,4 @@ README under **Reliability safeguards**.
 
 `new` → scored → `rejected` (hidden) **or** `fit` → `drafted` (or `duplicate` if the website already has a draft) → `sent` (then optionally marked replied) / `skipped`
 
-A re-score can move a waiting startup between `fit`/`drafted` and `rejected`; its draft is hidden (`set_aside`) or restored to match. Sent and skipped startups are never re-scored.
+A waiting draft is `archived` 7 days after the announcement (hidden, never deleted). A re-score can move a waiting startup between `fit`/`drafted` and `rejected`; its draft is hidden (`set_aside`) or restored to match. Sent and skipped startups are never re-scored.
